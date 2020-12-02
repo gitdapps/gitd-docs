@@ -10,7 +10,38 @@ const getters = {};
 const actions = {
   async fetchRef({ rootState: { octokit }, commit }, { owner, repo, ref }) {
     if (octokit) {
-      let { data } = await octokit.git.getRef({ owner, repo, ref });
+      let data,
+        prefix = "";
+
+      if (!ref.startsWith("heads/") && !ref.startsWith("tags/")) {
+        prefix = "heads/";
+      }
+
+      try {
+        data = (
+          await octokit.git.getRef({
+            owner,
+            repo,
+            ref: `${prefix}${ref}`,
+          })
+        ).data;
+      } catch (e) {
+        prefix = "tags/";
+      }
+
+      if (!data) {
+        try {
+          data = (
+            await octokit.git.getRef({
+              owner,
+              repo,
+              ref: `${prefix}${ref}`,
+            })
+          ).data;
+        } catch (e) {
+          data = {};
+        }
+      }
 
       commit("setRef", {
         owner,
