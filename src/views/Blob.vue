@@ -1,37 +1,35 @@
 <template>
   <div class="blob">
-    <!-- <p>routeRepoOwner = {{ routeRepoOwner }}</p>
-    <p>routeRepoName = {{ routeRepoName }}</p>
-    <p>routeRef = {{ routeRef }}</p>
-    <p>repo.name = {{ repo.name }}</p>
-    <p>ref = {{ ref.ref }}</p> -->
-    <!-- <p>$route.params.owner = {{ $route.params.owner }}</p>
-    <p>$route.params.repo = {{ $route.params.repo }}</p>
-    <p>
-      {{ markdownBlobs.length }} markdown blob{{
-        markdownBlobs.length === 1 ? "" : "s"
-      }}
-    </p>
-    <p>defaultMarkdownBlob = {{ defaultMarkdownBlob.path }}</p>
-    <ul>
-      <li v-for="markdownBlob in markdownBlobs" :key="markdownBlob.path">
-        <a
-          :href="
-            `/${$route.params.owner}/${$route.params.repo}/${markdownBlob.path}`
-          "
-          >{{ markdownBlob.path }}</a
-        >
-      </li>
-    </ul> -->
-    {{ content }}
+    <sidebar></sidebar>
+    <div class="page" v-html="compiledMarkdown"></div>
   </div>
 </template>
 
+<style scoped>
+.page {
+  box-shadow: 0px 0px 3px 0px #aaa;
+  height: 100%;
+  width: 900px;
+  margin: auto;
+  padding: 30px;
+  background: white;
+  overflow: hidden;
+}
+</style>
+
 <script>
+import marked from "marked";
+import DOMPurify from "dompurify";
+
+import Sidebar from "@/components/Sidebar.vue";
+
 export default {
   name: "Blob",
+  components: {
+    Sidebar,
+  },
   data: () => ({
-    content: "",
+    compiledMarkdown: "",
   }),
   async mounted() {
     let owner = this.$route.params.owner,
@@ -45,7 +43,7 @@ export default {
         path,
       });
 
-    this.content = atob(content);
+    this.compiledMarkdown = DOMPurify.sanitize(marked(atob(content)));
   },
 };
 </script>

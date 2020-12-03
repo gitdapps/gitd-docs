@@ -17,7 +17,7 @@ const routes = [
     component: Repo,
   },
   {
-    path: "/:owner/:repo/blob/:ref/:path",
+    path: "/:owner/:repo/blob/:ref/:path*",
     name: "Blob",
     component: Blob,
   },
