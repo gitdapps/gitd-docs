@@ -1,12 +1,13 @@
 <template>
-  <div class="sidebar">SIDEBAR</div>
+  <div class="sidebar">
+    <ul>
+      <li></li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
 .sidebar {
-  position: fixed;
-  top: 30px;
-  left: 30px;
   width: 230px;
 }
 </style>
