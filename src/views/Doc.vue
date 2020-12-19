@@ -1,7 +1,8 @@
 <template>
   <div class="doc">
-    <sidebar id="sidebar"></sidebar>
+    <sidebar id="sidebar" v-bind:headings="pageHeadings"></sidebar>
     <page id="page" v-bind:content="pageContent"></page>
+    <div id="btm-spacer"></div>
   </div>
 </template>
 
@@ -9,10 +10,17 @@
 .doc {
   height: 100%;
   padding-bottom: 30px;
+  margin-bottom: 300px;
+}
+
+#btm-spacer {
+  height: 100%;
 }
 </style>
 
 <script>
+import marked from "marked";
+
 import Sidebar from "@/components/Sidebar.vue";
 import Page from "@/components/Page.vue";
 
@@ -37,6 +45,23 @@ export default {
 
         if (!Array.isArray(content)) {
           return content;
+        } else {
+          return undefined;
+        }
+      } catch (e) {
+        return undefined;
+      }
+    },
+    pageHeadings() {
+      let { owner, repository: repo, reference: ref, path } = this;
+
+      try {
+        let content = this.$store.state.content[owner][repo][ref][path];
+
+        if (!Array.isArray(content)) {
+          return marked
+            .lexer(atob(content.content))
+            .filter((e) => e.type === "heading");
         } else {
           return undefined;
         }

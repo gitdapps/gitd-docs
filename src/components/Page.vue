@@ -2,7 +2,7 @@
   <div class="page" v-html="pageHtml"></div>
 </template>
 
-<style scoped>
+<style>
 .page {
   border-radius: 2px;
   box-shadow: 0px 0px 3px 0px #aaa;
@@ -11,8 +11,6 @@
   padding: 30px;
   background: white;
   overflow: hidden;
-  min-height: 100%;
-  margin-bottom: 30px;
 }
 </style>
 
@@ -25,10 +23,26 @@ export default {
   props: {
     content: Object,
   },
+  updated() {
+    this.$nextTick(() => {
+      let el = document.querySelector(
+        `#heading-${this.$route.hash.substring(1)}`
+      );
+
+      if (el) {
+        window.scroll({
+          top: el.getBoundingClientRect().top + window.pageYOffset - 80,
+          behavior: "smooth",
+        });
+      }
+    });
+  },
   computed: {
     pageHtml() {
       if (this.content) {
-        return DOMPurify.sanitize(marked(atob(this.content.content)));
+        return DOMPurify.sanitize(
+          marked(atob(this.content.content), { headerPrefix: "heading-" })
+        );
       }
 
       return "";

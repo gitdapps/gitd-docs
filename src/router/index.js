@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/:owner/:repo/:ref?/:path*",
+    path: "/:owner/:repo/:path*",
     name: "Doc",
     component: Doc,
     props(route) {

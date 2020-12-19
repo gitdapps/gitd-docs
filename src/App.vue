@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <topbar id="topbar"></topbar>
+    <topbar id="topbar" v-bind:sections="sections"></topbar>
     <router-view id="view" />
   </div>
 </template>
@@ -11,18 +11,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
-}
-
-#topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-#sidebar {
-  position: fixed;
-  top: 80px;
-  left: 30px;
 }
 
 body {
@@ -50,10 +38,44 @@ export default {
       return this.update();
     },
   },
+  computed: {
+    sections() {
+      try {
+        let {
+            params: { owner, repo, path },
+            query: { ref },
+          } = this.$route,
+          { default_branch: defaultBranch } = this.$store.state.repos[owner][
+            repo
+          ],
+          {
+            object: { sha },
+          } = this.$store.state.refs[owner][repo][
+            ref || `heads/${defaultBranch}`
+          ],
+          { tree } = this.$store.state.trees[owner][repo][sha],
+          node = tree.find((e) => e.path === path),
+          prefix =
+            node.type === "tree"
+              ? node.path
+              : node.path
+                  .split("/")
+                  .slice(0, -1)
+                  .join("/");
+
+        return tree
+          .filter((e) => e.type === "tree")
+          .filter((e) => e.path.startsWith(prefix));
+      } catch (e) {
+        return [];
+      }
+    },
+  },
   methods: {
     async update() {
       let {
-        params: { owner, repo, ref, path },
+        params: { owner, repo, path },
+        query: { ref },
       } = this.$route;
 
       // make sure repo is in the store, capture the default branch in case we need it later
@@ -91,11 +113,7 @@ export default {
           sha,
         });
 
-        this.$router.push(
-          `/${owner}/${repo}/${ref || defaultBranch}/${
-            defaultMarkdownBlob.path
-          }`
-        );
+        this.$router.push(`/${owner}/${repo}/${defaultMarkdownBlob.path}`);
       } else {
         // if we have a good path in the route, fetch the content
         let content = await this.$store.dispatch("content/fetchContent", {
