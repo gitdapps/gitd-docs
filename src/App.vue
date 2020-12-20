@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <topbar id="topbar" v-bind:sections="sections"></topbar>
+    <topbar id="topbar" v-bind:repo="repo" v-bind:sections="sections"></topbar>
     <router-view id="view" />
   </div>
 </template>
@@ -39,6 +39,14 @@ export default {
     },
   },
   computed: {
+    repo() {
+      try {
+        let { owner, repo } = this.$route.params;
+        return this.$store.state.repos[owner][repo];
+      } catch (e) {
+        return undefined;
+      }
+    },
     sections() {
       try {
         let {
@@ -69,7 +77,8 @@ export default {
           .filter((e) => !e.path.split("/").some((e) => e.startsWith(".")))
           .filter(
             (e) =>
-              e.path.startsWith(prefix) && e.path.split("/").length === depth + 1
+              e.path.startsWith(prefix) &&
+              e.path.split("/").length === depth + 1
           );
       } catch (e) {
         return [];
@@ -92,13 +101,15 @@ export default {
         }
       );
 
+      ref = ref || `heads/${defaultBranch}`; // if the ref isnt specified in route, fall back to repo default branch
+
       // make sure ref is in the store, capture the sha
       let {
         object: { sha },
       } = await this.$store.dispatch("refs/fetchRef", {
         owner,
         repo,
-        ref: ref || `heads/${defaultBranch}`, // if the ref isnt in route params, fall back to repo default branch
+        ref,
       });
 
       // make sure tree is in the store
@@ -119,6 +130,9 @@ export default {
         });
 
         this.$router.push(`/${owner}/${repo}/${defaultMarkdownBlob.path}`);
+      } else if (path.endsWith("index.md")) {
+        // redirect "index.md" to directory url
+        this.$router.push(`/${owner}/${repo}/${path.replace("/index.md", "")}`);
       } else {
         // if we have a good path in the route, fetch the content
         let content = await this.$store.dispatch("content/fetchContent", {
@@ -131,22 +145,26 @@ export default {
         if (Array.isArray(content)) {
           // we're dealing with a directory
           // first, try to use an index.md file
-          let directoryContent = content.find((e) =>
-            e.path.endsWith("index.md")
+          let indexContent = content.find(({ path }) =>
+            path.endsWith("index.md")
           );
 
-          if (!directoryContent) {
-            // if there is no index.md, fallback to first markdown file
-            directoryContent = content[0];
-          }
+          if (indexContent) {
+            // fetch the index
+            await this.$store.dispatch("content/fetchContent", {
+              owner,
+              repo,
+              ref,
+              path: indexContent.path,
+            });
+          } else {
+            // if there is no index, redirect to first markdown file
+            let firstMk = content.find(({ path }) => path.endsWith(".md"));
 
-          // fetch the content to be rendered for the directory page
-          await this.$store.dispatch("content/fetchContent", {
-            owner,
-            repo,
-            ref,
-            path: directoryContent.path,
-          });
+            if (firstMk) {
+              this.$router.push(`/${owner}/${repo}/${firstMk.path}`);
+            }
+          }
         }
       }
     },

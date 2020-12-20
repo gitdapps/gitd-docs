@@ -11,7 +11,8 @@ const routes = [
     component: Doc,
     props(route) {
       let {
-        params: { owner, repo, ref, path },
+        params: { owner, repo, path },
+        query: { ref },
       } = route;
 
       return {

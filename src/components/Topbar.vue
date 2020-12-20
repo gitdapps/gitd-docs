@@ -2,7 +2,7 @@
   <nav class="topbar">
     <ul>
       <li v-for="section in sections" v-bind:key="section.url">
-        <a v-bind:href="section.path"> {{ sectionDisplay(section) }}</a>
+        <a v-bind:href="sectionHref(section)"> {{ sectionDisplay(section) }}</a>
       </li>
     </ul>
   </nav>
@@ -24,32 +24,47 @@
 ul {
   display: flex;
   list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 li {
   font-weight: bold;
-  margin: 0 1em;
-  padding: 0.4em 1em;
+  margin: 0;
+  padding: 0.3em;
   transition: 0.5s;
-  border-radius: 1em;
-  border: solid 1px transparent;
 }
 
-li:hover {
-  border-left: solid 1px lightgrey;
-  border-right: solid 1px lightgrey;
+li a {
+  /* text-decoration: none; */
+  color: #555;
+  transition: 0.5s;
+}
+
+li.active a {
+  color: black;
 }
 </style>
 
 <script>
+import { displayCase } from "@/utils";
+
 export default {
   name: "Topbar",
   props: {
+    repo: Object,
     sections: Array,
   },
   methods: {
     sectionDisplay(section) {
-      return section.path.split("/").pop();
+      return displayCase(section.path.split("/").pop());
+    },
+    sectionHref(section) {
+      try {
+        return `/${this.repo.full_name}/${section.path}`;
+      } catch (e) {
+        return undefined;
+      }
     },
   },
 };

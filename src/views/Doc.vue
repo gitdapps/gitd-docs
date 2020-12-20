@@ -41,30 +41,30 @@ export default {
       let { owner, repository: repo, reference: ref, path } = this;
 
       try {
+        if (!ref) {
+          // fall back to repo default branch if ref not specified
+          ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`;
+        }
+
         let content = this.$store.state.content[owner][repo][ref][path];
 
-        if (!Array.isArray(content)) {
-          return content;
-        } else {
-          return undefined;
+        if (Array.isArray(content)) {
+          // we're dealing with a directory, try to use the index.md file
+          content = this.$store.state.content[owner][repo][ref][
+            content.find(({ path }) => path.endsWith("index.md")).path
+          ];
         }
+
+        return content;
       } catch (e) {
         return undefined;
       }
     },
     pageHeadings() {
-      let { owner, repository: repo, reference: ref, path } = this;
-
       try {
-        let content = this.$store.state.content[owner][repo][ref][path];
-
-        if (!Array.isArray(content)) {
-          return marked
-            .lexer(atob(content.content))
-            .filter((e) => e.type === "heading");
-        } else {
-          return undefined;
-        }
+        return marked
+          .lexer(atob(this.pageContent.content))
+          .filter((e) => e.type === "heading");
       } catch (e) {
         return undefined;
       }

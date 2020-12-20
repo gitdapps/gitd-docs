@@ -15,6 +15,7 @@
 </style>
 
 <script>
+import _ from "lodash";
 import marked from "marked";
 import DOMPurify from "dompurify";
 
@@ -40,8 +41,18 @@ export default {
   computed: {
     pageHtml() {
       if (this.content) {
+        let baseUrl;
+
+        if (this.content.path.endsWith("index.md")) {
+          // we're rendering an index page, so we'll need to specify baseUrl
+          baseUrl = `${_.nth(this.content.path.split("/"), -2)}/`;
+        }
+
         return DOMPurify.sanitize(
-          marked(atob(this.content.content), { headerPrefix: "heading-" })
+          marked(atob(this.content.content), {
+            baseUrl,
+            headerPrefix: "heading-",
+          })
         );
       }
 
