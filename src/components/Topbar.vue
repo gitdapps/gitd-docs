@@ -2,7 +2,7 @@
   <nav class="topbar">
     <ul>
       <li v-for="section in sections" v-bind:key="section.url">
-        <a v-bind:href="section.path"> {{ section.path }}</a>
+        <a v-bind:href="section.path"> {{ sectionDisplay(section) }}</a>
       </li>
     </ul>
   </nav>
@@ -46,6 +46,11 @@ export default {
   name: "Topbar",
   props: {
     sections: Array,
+  },
+  methods: {
+    sectionDisplay(section) {
+      return section.path.split("/").pop();
+    },
   },
 };
 </script>

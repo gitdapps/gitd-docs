@@ -61,11 +61,16 @@ export default {
               : node.path
                   .split("/")
                   .slice(0, -1)
-                  .join("/");
+                  .join("/"),
+          depth = prefix.split("/").filter((e) => e.length > 0).length;
 
         return tree
           .filter((e) => e.type === "tree")
-          .filter((e) => e.path.startsWith(prefix));
+          .filter((e) => !e.path.split("/").some((e) => e.startsWith(".")))
+          .filter(
+            (e) =>
+              e.path.startsWith(prefix) && e.path.split("/").length === depth + 1
+          );
       } catch (e) {
         return [];
       }
