@@ -1,5 +1,6 @@
-import _ from "lodash";
-
 export function displayCase(str) {
-  return str.replace(/[-_]/g, " ").replace(/\w+/g, _.upperFirst);
+  return str
+    .replace(/[-_]/g, " ")
+    .replace(/([A-Z])/g, " $1")
+    .toLowerCase();
 }

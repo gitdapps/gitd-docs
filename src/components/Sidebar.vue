@@ -1,63 +1,46 @@
 <template>
-  <nav class="sidebar">
-    <ol>
-      <li
-        v-for="heading in headings"
-        v-bind:key="heading.text"
-        v-bind:class="headingClass(heading)"
-        v-bind:style="headingStyle(heading)"
-      >
-        <a v-bind:href="headingFragment(heading)">{{
-          headingDisplay(heading)
-        }}</a>
-      </li>
-    </ol>
+  <nav id="sidebar">
+    <a
+      class="heading-link"
+      v-for="heading in headings"
+      v-bind:key="heading.text"
+      v-bind:class="headingClass(heading)"
+      v-bind:style="headingStyle(heading)"
+      v-bind:href="headingFragment(heading)"
+    >
+      {{ headingDisplay(heading) }}
+    </a>
   </nav>
 </template>
 
 <style scoped>
-.sidebar {
+#sidebar {
   position: fixed;
   top: 80px;
   bottom: 20px;
   left: 30px;
   overflow-y: scroll;
   width: 250px;
-  border-radius: 1em;
 }
 
-ol {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-li {
+.heading-link {
   font-weight: bold;
-  margin: 0.1em 0;
-  padding: 0.4em 1em;
-  transition: 0.5s;
-  border-radius: 1em;
-  border: solid 1px transparent;
+  margin: 0.4em;
+  padding: 0.4em;
+  transition: 0.2s;
+  color: #333;
+  text-decoration: none;
+  border-radius: 0.4em;
+  text-transform: capitalize;
+  display: block;
 }
 
-li.active {
+.heading-link.active {
   background: lightgrey;
 }
 
-a {
-  text-decoration: none;
-  color: #555;
-  transition: 0.5s;
-}
-
-li.active a {
-  color: black;
-}
-
-li:hover {
-  border-left: solid 1px lightgrey;
-  border-right: solid 1px lightgrey;
+.heading-link:hover {
+  background: lightgrey;
 }
 </style>
 

@@ -5,16 +5,14 @@ import Vue from "vue";
 const state = () => ({});
 
 // getters
-const getters = {
-  getRepo: (state) => ({ owner, name }) => {
-    return _.get(state.repos, `[${owner}][${name}]`, {});
-  },
-};
+const getters = {};
 
 // actions
 const actions = {
-  async fetchRepo({ rootState: { octokit }, commit }, { owner, repo }) {
-    if (octokit) {
+  async fetchRepo({ rootState: { octokit }, commit, state }, { owner, repo }) {
+    let ret = _.get(state, `[${owner}][${repo}]`);
+
+    if (!ret && octokit) {
       let { data } = await octokit.repos.get({ owner, repo });
 
       commit("setRepo", {
@@ -23,8 +21,10 @@ const actions = {
         data,
       });
 
-      return data;
+      ret = data;
     }
+
+    return ret;
   },
 };
 

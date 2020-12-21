@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Vue from "vue";
 
 // initial state
@@ -8,50 +9,34 @@ const getters = {};
 
 // actions
 const actions = {
-  async fetchRef({ rootState: { octokit }, commit }, { owner, repo, ref }) {
-    if (octokit) {
-      let data,
-        prefix = "";
+  async fetchRef(
+    { rootState: { octokit }, commit, state },
+    { owner, repo, ref }
+  ) {
+    let ret = _.get(state, `[${owner}][${repo}][${ref}]`);
 
-      if (!ref.startsWith("heads/") && !ref.startsWith("tags/")) {
-        prefix = "heads/";
-      }
-
+    if (!ret && octokit) {
       try {
-        data = (
+        ret = (
           await octokit.git.getRef({
             owner,
             repo,
-            ref: `${prefix}${ref}`,
+            ref,
           })
         ).data;
+
+        commit("setRef", {
+          owner,
+          repo,
+          ref,
+          data: ret,
+        });
       } catch (e) {
-        prefix = "tags/";
+        ret = undefined;
       }
-
-      if (!data) {
-        try {
-          data = (
-            await octokit.git.getRef({
-              owner,
-              repo,
-              ref: `${prefix}${ref}`,
-            })
-          ).data;
-        } catch (e) {
-          data = {};
-        }
-      }
-
-      commit("setRef", {
-        owner,
-        repo,
-        ref,
-        data,
-      });
-
-      return data;
     }
+
+    return ret;
   },
 };
 

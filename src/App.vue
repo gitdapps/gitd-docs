@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <topbar id="topbar" v-bind:repo="repo" v-bind:sections="sections"></topbar>
+    <topbar id="topbar"></topbar>
     <router-view id="view" />
   </div>
 </template>
@@ -38,57 +38,10 @@ export default {
       return this.update();
     },
   },
-  computed: {
-    repo() {
-      try {
-        let { owner, repo } = this.$route.params;
-        return this.$store.state.repos[owner][repo];
-      } catch (e) {
-        return undefined;
-      }
-    },
-    sections() {
-      try {
-        let {
-            params: { owner, repo, path },
-            query: { ref },
-          } = this.$route,
-          { default_branch: defaultBranch } = this.$store.state.repos[owner][
-            repo
-          ],
-          {
-            object: { sha },
-          } = this.$store.state.refs[owner][repo][
-            ref || `heads/${defaultBranch}`
-          ],
-          { tree } = this.$store.state.trees[owner][repo][sha],
-          node = tree.find((e) => e.path === path),
-          prefix =
-            node.type === "tree"
-              ? node.path
-              : node.path
-                  .split("/")
-                  .slice(0, -1)
-                  .join("/"),
-          depth = prefix.split("/").filter((e) => e.length > 0).length;
-
-        return tree
-          .filter((e) => e.type === "tree")
-          .filter((e) => !e.path.split("/").some((e) => e.startsWith(".")))
-          .filter(
-            (e) =>
-              e.path.startsWith(prefix) &&
-              e.path.split("/").length === depth + 1
-          );
-      } catch (e) {
-        return [];
-      }
-    },
-  },
   methods: {
     async update() {
       let {
-        params: { owner, repo, path },
+        params: { owner, repo, path = "" },
         query: { ref },
       } = this.$route;
 
@@ -120,17 +73,7 @@ export default {
       });
 
       // if the path isnt in the route, push the default markdown path to the route
-      if (!path) {
-        let defaultMarkdownBlob = this.$store.getters[
-          "trees/defaultMarkdownBlob"
-        ]({
-          owner,
-          repo,
-          sha,
-        });
-
-        this.$router.push(`/${owner}/${repo}/${defaultMarkdownBlob.path}`);
-      } else if (path.endsWith("index.md")) {
+      if (path.endsWith("index.md")) {
         // redirect "index.md" to directory url
         this.$router.push(`/${owner}/${repo}/${path.replace("/index.md", "")}`);
       } else {
