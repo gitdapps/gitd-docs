@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Vue from "vue";
 
 // initial state
@@ -9,10 +10,12 @@ const getters = {};
 // actions
 const actions = {
   async fetchContent(
-    { rootState: { octokit }, commit },
+    { rootState: { octokit }, commit, state },
     { owner, repo, ref, path }
   ) {
-    if (octokit) {
+    let ret = _.get(state, [owner, repo, ref, path]);
+
+    if (_.isNil(ret) && octokit) {
       let { data } = await octokit.repos.getContent({ owner, repo, ref, path });
 
       commit("setContent", {
@@ -23,8 +26,10 @@ const actions = {
         data,
       });
 
-      return data;
+      ret = data;
     }
+
+    return ret;
   },
 };
 

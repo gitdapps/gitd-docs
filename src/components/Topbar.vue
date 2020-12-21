@@ -1,16 +1,16 @@
 <template>
   <header id="topbar">
-    <a id="avatar-link" v-bind:href="avatarHref"
+    <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
-    /></a>
+    /></router-link>
     <div id="current-section">{{ sectionDisplay(currentSection) }}</div>
     <nav id="section-nav">
-      <a
+      <router-link
         v-for="section in sections"
         v-bind:key="section.url"
         class="section-link"
-        v-bind:href="sectionHref(section)"
-        >{{ sectionDisplay(section) }}</a
+        v-bind:to="sectionHref(section)"
+        >{{ sectionDisplay(section) }}</router-link
       >
     </nav>
   </header>
@@ -142,7 +142,7 @@ export default {
       try {
         return `/${this.repo.full_name}`;
       } catch (e) {
-        return undefined;
+        return "#";
       }
     },
   },

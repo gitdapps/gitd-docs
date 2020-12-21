@@ -1,7 +1,7 @@
 <template>
   <div class="doc">
-    <sidebar id="sidebar" v-bind:headings="pageHeadings"></sidebar>
-    <page id="page" v-bind:content="pageContent"></page>
+    <sidebar id="sidebar" v-bind:headings="docRendering.headings"></sidebar>
+    <page id="page" v-bind:contentHtml="docRendering.html"></page>
     <div id="btm-spacer"></div>
   </div>
 </template>
@@ -19,10 +19,36 @@
 </style>
 
 <script>
+import _ from "lodash";
 import marked from "marked";
+import DOMPurify from "dompurify";
+
+import router from "@/router";
 
 import Sidebar from "@/components/Sidebar.vue";
 import Page from "@/components/Page.vue";
+
+// marked.use({
+//   renderer: {
+//     link(href, title = "", text) {
+//       return `<a href="${href}" title="${title}" class="page-link">${text}</a>`;
+//     },
+//   },
+// });
+
+document.addEventListener("click", (e) => {
+  if (_.includes(document.querySelectorAll(".page a"), e.target)) {
+    let href = e.target.getAttribute("href");
+
+    if (!href.includes("//")) {
+      router.push(e.target.getAttribute("href"));
+    } else {
+      window.open(href, "_blank");
+    }
+
+    e.preventDefault();
+  }
+});
 
 export default {
   name: "Doc",
@@ -37,7 +63,7 @@ export default {
     Page,
   },
   computed: {
-    pageContent() {
+    docContent() {
       let { owner, repository: repo, reference: ref, path } = this;
 
       try {
@@ -46,28 +72,49 @@ export default {
           ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`;
         }
 
-        let content = this.$store.state.content[owner][repo][ref][path];
+        let docContent = this.$store.state.content[owner][repo][ref][path];
 
-        if (Array.isArray(content)) {
+        if (Array.isArray(docContent)) {
           // we're dealing with a directory, try to use the index.md file
-          content = this.$store.state.content[owner][repo][ref][
-            content.find(({ path }) => path.endsWith("index.md")).path
+          docContent = this.$store.state.content[owner][repo][ref][
+            docContent.find(({ path }) => path.endsWith("index.md")).path
           ];
         }
 
-        return content;
+        return docContent;
       } catch (e) {
         return undefined;
       }
     },
-    pageHeadings() {
-      try {
-        return marked
-          .lexer(atob(this.pageContent.content))
-          .filter((e) => e.type === "heading");
-      } catch (e) {
-        return undefined;
+    docRendering() {
+      if (this.docContent) {
+        let baseUrl;
+
+        if (this.docContent.path.endsWith("index.md")) {
+          // we're rendering an index page, so we'll need to specify baseUrl
+          baseUrl = `${_.nth(this.docContent.path.split("/"), -2)}/`;
+        }
+
+        let headings = [],
+          html = DOMPurify.sanitize(
+            marked(atob(this.docContent.content), {
+              baseUrl,
+              headerPrefix: "heading-",
+              walkTokens(token) {
+                if (token.type === "heading") {
+                  headings.push(token);
+                }
+              },
+            }),
+            { ADD_TAGS: ["router-link"], ADD_ATTR: ["to"] }
+          );
+        return {
+          html,
+          headings,
+        };
       }
+
+      return {};
     },
   },
 };

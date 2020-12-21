@@ -1,5 +1,5 @@
 <template>
-  <div class="page" v-html="pageHtml"></div>
+  <div class="page" v-html="contentHtml"></div>
 </template>
 
 <style>
@@ -15,49 +15,32 @@
 </style>
 
 <script>
-import _ from "lodash";
-import marked from "marked";
-import DOMPurify from "dompurify";
-
 export default {
   name: "Page",
   props: {
-    content: Object,
+    contentHtml: String,
+  },
+  methods: {
+    scrollToHash(hash) {
+      this.$nextTick(() => {
+        let el = document.querySelector(`#heading-${hash.substring(1)}`);
+
+        if (el) {
+          window.scroll({
+            top: el.getBoundingClientRect().top + window.pageYOffset - 80,
+            behavior: "smooth",
+          });
+        }
+      });
+    },
+  },
+  watch: {
+    $route({ hash }) {
+      this.scrollToHash(hash);
+    },
   },
   updated() {
-    this.$nextTick(() => {
-      let el = document.querySelector(
-        `#heading-${this.$route.hash.substring(1)}`
-      );
-
-      if (el) {
-        window.scroll({
-          top: el.getBoundingClientRect().top + window.pageYOffset - 80,
-          behavior: "smooth",
-        });
-      }
-    });
-  },
-  computed: {
-    pageHtml() {
-      if (this.content) {
-        let baseUrl;
-
-        if (this.content.path.endsWith("index.md")) {
-          // we're rendering an index page, so we'll need to specify baseUrl
-          baseUrl = `${_.nth(this.content.path.split("/"), -2)}/`;
-        }
-
-        return DOMPurify.sanitize(
-          marked(atob(this.content.content), {
-            baseUrl,
-            headerPrefix: "heading-",
-          })
-        );
-      }
-
-      return "";
-    },
+    this.scrollToHash(this.$route.hash);
   },
 };
 </script>

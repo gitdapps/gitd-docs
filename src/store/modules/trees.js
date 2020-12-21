@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Vue from "vue";
 
 // initial state
@@ -8,8 +9,13 @@ const getters = {};
 
 // actions
 const actions = {
-  async fetchTree({ rootState: { octokit }, commit }, { owner, repo, sha }) {
-    if (octokit) {
+  async fetchTree(
+    { rootState: { octokit }, commit, state },
+    { owner, repo, sha }
+  ) {
+    let ret = _.get(state, `[${owner}][${repo}][${sha}]`);
+
+    if (!ret && octokit) {
       let { data } = await octokit.git.getTree({
         owner,
         repo,
@@ -24,8 +30,10 @@ const actions = {
         data,
       });
 
-      return data;
+      ret = data;
     }
+
+    return ret;
   },
 };
 

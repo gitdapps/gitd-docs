@@ -1,15 +1,15 @@
 <template>
   <nav id="sidebar">
-    <a
+    <router-link
       class="heading-link"
       v-for="heading in headings"
       v-bind:key="heading.text"
       v-bind:class="headingClass(heading)"
       v-bind:style="headingStyle(heading)"
-      v-bind:href="headingFragment(heading)"
+      v-bind:to="headingFragment(heading)"
     >
       {{ headingDisplay(heading) }}
-    </a>
+    </router-link>
   </nav>
 </template>
 
