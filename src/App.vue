@@ -56,22 +56,6 @@ export default {
 
       ref = ref || `heads/${defaultBranch}`; // if the ref isnt specified in route, fall back to repo default branch
 
-      // make sure ref is in the store, capture the sha
-      let {
-        object: { sha },
-      } = await this.$store.dispatch("refs/fetchRef", {
-        owner,
-        repo,
-        ref,
-      });
-
-      // make sure tree is in the store
-      await this.$store.dispatch("trees/fetchTree", {
-        owner,
-        repo,
-        sha,
-      });
-
       // if the path isnt in the route, push the default markdown path to the route
       if (path.endsWith("index.md")) {
         // redirect "index.md" to directory url
@@ -109,6 +93,27 @@ export default {
             }
           }
         }
+
+        // fetch the directory content
+        await this.$store.dispatch("content/fetchContent", {
+          owner,
+          repo,
+          ref,
+          path: path
+            .split("/")
+            .slice(0, -1)
+            .join("/"),
+        });
+
+        await this.$store.dispatch("content/fetchContent", {
+          owner,
+          repo,
+          ref,
+          path: path
+            .split("/")
+            .slice(0, -2)
+            .join("/"),
+        });
       }
     },
   },

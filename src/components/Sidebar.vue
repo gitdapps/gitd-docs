@@ -1,6 +1,15 @@
 <template>
   <nav id="sidebar">
     <router-link
+      class="file-link"
+      v-for="file in files"
+      v-bind:key="file.url"
+      v-bind:to="file.path"
+    >
+      {{ fileDisplay(file) }}
+    </router-link>
+    ---
+    <router-link
       class="heading-link"
       v-for="heading in headings"
       v-bind:key="heading.text"
@@ -35,6 +44,18 @@
   display: block;
 }
 
+.file-link {
+  font-weight: bold;
+  margin: 0.4em;
+  padding: 0.4em;
+  transition: 0.2s;
+  color: #333;
+  text-decoration: none;
+  border-radius: 0.4em;
+  text-transform: capitalize;
+  display: block;
+}
+
 .heading-link.active {
   background: lightgrey;
 }
@@ -45,16 +66,13 @@
 </style>
 
 <script>
-// function decodeHtml(html) {
-//   let txt = document.createElement("textarea");
-//   txt.innerHTML = html;
-//   return txt.value;
-// }
+import { displayCase } from "@/utils";
 
 export default {
   name: "Sidebar",
   props: {
     headings: Array,
+    files: Array,
   },
   methods: {
     headingClass(heading) {
@@ -69,17 +87,24 @@ export default {
     },
     headingDisplay(heading) {
       return heading.raw.replace(/#/gi, "").substring(1);
-      // return decodeHtml(
-      //   heading.tokens
-      //     .filter(({ type }) => type === "text")
-      //     .reduce((a, v) => a + v.text, "")
-      // );
     },
     headingFragment(heading) {
       return `#${this.headingDisplay(heading)
         .toLowerCase()
         .replace(/ /gi, "-")
         .replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`;
+    },
+    fileDisplay(file) {
+      try {
+        return displayCase(
+          file.name
+            .split(".")
+            .slice(0, -1)
+            .join(".")
+        );
+      } catch (e) {
+        return "";
+      }
     },
   },
 };

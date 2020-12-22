@@ -5,8 +5,6 @@ import { Octokit } from "@octokit/rest";
 
 import users from "./modules/users";
 import repos from "./modules/repos";
-import refs from "./modules/refs";
-import trees from "./modules/trees";
 import content from "./modules/content";
 
 const initOctokit = (auth) =>
@@ -47,7 +45,7 @@ const store = new Vuex.Store({
   getters,
   actions,
   mutations,
-  modules: { users, repos, refs, trees, content },
+  modules: { users, repos, content },
 });
 
 store.watch(

@@ -20,7 +20,6 @@ const actions = {
         owner,
         repo,
         tree_sha: sha,
-        recursive: true,
       });
 
       commit("setTree", {

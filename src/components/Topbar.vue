@@ -3,16 +3,18 @@
     <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
     /></router-link>
-    <div id="current-section">{{ sectionDisplay(currentSection) }}</div>
-    <nav id="section-nav">
-      <router-link
-        v-for="section in sections"
-        v-bind:key="section.url"
-        class="section-link"
-        v-bind:to="sectionHref(section)"
-        >{{ sectionDisplay(section) }}</router-link
-      >
-    </nav>
+    <div id="nav-stack">
+      <div id="pwd">{{ dirDisplay(pwd || repo) }}</div>
+      <nav id="dir-nav">
+        <router-link
+          v-for="dir in dirs"
+          v-bind:key="dir.url"
+          class="dir-link"
+          v-bind:to="dirHref(dir)"
+          >{{ dirDisplay(dir) }}</router-link
+        >
+      </nav>
+    </div>
   </header>
 </template>
 
@@ -26,25 +28,30 @@
   overflow: hidden;
   border-bottom: solid 1px #ddd;
   display: flex;
-  padding: 1em;
+  padding: 0.5em;
+  align-items: center;
+}
+
+#avatar,
+#avatar-link {
+  height: 3em;
+  position: relative;
+  top: -0.05em;
 }
 
 #avatar-link {
-  height: 2em;
+  margin: 0.2em;
+}
+#dir-nav {
+  margin: 0.3em;
+  position: relative;
+  top: 0.1em;
 }
 
-#avatar {
-  height: 2em;
-}
-
-#section-nav {
-  margin: 0.5em 1em;
-}
-
-.section-link {
+.dir-link {
   font-weight: bold;
-  margin: 0.4em;
-  padding: 0.4em;
+  margin: 0.3em;
+  padding: 0.3em;
   transition: 0.2s;
   color: #333;
   text-decoration: none;
@@ -52,15 +59,17 @@
   text-transform: capitalize;
 }
 
-#current-section {
-  font-size: 1.5em;
+#pwd {
+  font-size: 1.2em;
   font-weight: 100;
   text-transform: capitalize;
-  margin: 0 1em;
-  padding-top: 0.1em;
+  margin: 0 0.5em;
+  padding: 0 0.2em;
+  position: relative;
+  top: -0.1em;
 }
 
-.section-link:hover {
+.dir-link:hover {
   background: lightgrey;
 }
 </style>
@@ -76,66 +85,84 @@ export default {
         let { owner, repo } = this.$route.params;
         return this.$store.state.repos[owner][repo];
       } catch (e) {
-        return undefined;
+        return null;
       }
     },
-    currentSection() {
+    pwd() {
       try {
         let {
-            params: { owner, repo, path },
-            query: {
-              ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`,
-            },
-          } = this.$route,
-          {
-            object: { sha },
-          } = this.$store.state.refs[owner][repo][ref],
-          { tree } = this.$store.state.trees[owner][repo][sha];
+          params: { owner, repo, path },
+          query: {
+            ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`,
+          },
+        } = this.$route;
 
-        return tree.find((e) => e.path === path);
-      } catch (e) {
-        return undefined;
-      }
-    },
-    sections() {
-      try {
-        let {
-            params: { owner, repo, path },
-            query: {
-              ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`,
-            },
-          } = this.$route,
-          {
-            object: { sha },
-          } = this.$store.state.refs[owner][repo][ref],
-          { tree } = this.$store.state.trees[owner][repo][sha],
-          node = tree.find((e) => e.path === path),
-          prefix =
-            node.type === "tree"
-              ? node.path
-              : node.path
-                  .split("/")
-                  .slice(0, -1)
-                  .join("/"),
-          depth = prefix.split("/").filter((e) => e.length > 0).length;
+        let content = this.$store.state.content[owner][repo][ref][path];
 
-        return tree
-          .filter((e) => e.type === "tree")
-          .filter((e) => !e.path.split("/").some((e) => e.startsWith(".")))
-          .filter(
+        let parentContent = this.$store.state.content[owner][repo][ref][
+          path
+            .split("/")
+            .slice(0, -1)
+            .join("/")
+        ];
+
+        let grandParentContent = this.$store.state.content[owner][repo][ref][
+          path
+            .split("/")
+            .slice(0, -2)
+            .join("/")
+        ];
+
+        if (Array.isArray(content)) {
+          // showing a directory
+          return parentContent.find((e) => e.path === path);
+        } else {
+          // showing a file
+          return grandParentContent.find(
             (e) =>
-              e.path.startsWith(prefix) &&
-              e.path.split("/").length === depth + 1
+              e.path ===
+              path
+                .split("/")
+                .slice(0, -1)
+                .join("/")
           );
+        }
       } catch (e) {
-        return [];
+        return null;
+      }
+    },
+    dirs() {
+      try {
+        let {
+          params: { owner, repo, path },
+          query: {
+            ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`,
+          },
+        } = this.$route;
+
+        let content = this.$store.state.content[owner][repo][ref][path];
+
+        if (!Array.isArray(content)) {
+          content = this.$store.state.content[owner][repo][ref][
+            path
+              .split("/")
+              .slice(0, -1)
+              .join("/")
+          ];
+        }
+
+        return content.filter(
+          ({ type, name }) => type === "dir" && !name.startsWith(".")
+        );
+      } catch (e) {
+        return null;
       }
     },
     avatarSrc() {
       try {
         return this.repo.owner.avatar_url;
       } catch (e) {
-        return undefined;
+        return null;
       }
     },
     avatarHref() {
@@ -147,18 +174,14 @@ export default {
     },
   },
   methods: {
-    sectionDisplay(section) {
-      try {
-        return displayCase(section.path.split("/").pop());
-      } catch (e) {
-        return undefined;
-      }
+    dirDisplay({ name } = {}) {
+      return displayCase(name);
     },
-    sectionHref(section) {
+    dirHref(dir) {
       try {
-        return `/${this.repo.full_name}/${section.path}`;
+        return `/${this.repo.full_name}/${dir.path}`;
       } catch (e) {
-        return undefined;
+        return null;
       }
     },
   },

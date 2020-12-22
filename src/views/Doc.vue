@@ -1,6 +1,10 @@
 <template>
   <div class="doc">
-    <sidebar id="sidebar" v-bind:headings="docRendering.headings"></sidebar>
+    <sidebar
+      id="sidebar"
+      v-bind:headings="docRendering.headings"
+      v-bind:files="files"
+    ></sidebar>
     <page id="page" v-bind:contentHtml="docRendering.html"></page>
     <div id="btm-spacer"></div>
   </div>
@@ -27,14 +31,6 @@ import router from "@/router";
 
 import Sidebar from "@/components/Sidebar.vue";
 import Page from "@/components/Page.vue";
-
-// marked.use({
-//   renderer: {
-//     link(href, title = "", text) {
-//       return `<a href="${href}" title="${title}" class="page-link">${text}</a>`;
-//     },
-//   },
-// });
 
 document.addEventListener("click", (e) => {
   if (_.includes(document.querySelectorAll(".page a"), e.target)) {
@@ -115,6 +111,26 @@ export default {
       }
 
       return {};
+    },
+    files() {
+      let { owner, repository: repo, reference: ref, path } = this;
+
+      try {
+        if (!ref) {
+          // fall back to repo default branch if ref not specified
+          ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`;
+        }
+
+        let content = this.$store.state.content[owner][repo][ref][path];
+
+        if (!Array.isArray(content)) {
+          return [];
+        }
+
+        return content.filter((e) => e.name !== "index.md");
+      } catch (e) {
+        return undefined;
+      }
     },
   },
 };
