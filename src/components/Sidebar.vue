@@ -1,15 +1,6 @@
 <template>
   <nav id="sidebar">
     <router-link
-      class="file-link"
-      v-for="file in files"
-      v-bind:key="file.url"
-      v-bind:to="file.path"
-    >
-      {{ fileDisplay(file) }}
-    </router-link>
-    ---
-    <router-link
       class="heading-link"
       v-for="heading in headings"
       v-bind:key="heading.text"
@@ -30,21 +21,10 @@
   left: 30px;
   overflow-y: scroll;
   width: 250px;
+  z-index: 1;
 }
 
 .heading-link {
-  font-weight: bold;
-  margin: 0.4em;
-  padding: 0.4em;
-  transition: 0.2s;
-  color: #333;
-  text-decoration: none;
-  border-radius: 0.4em;
-  text-transform: capitalize;
-  display: block;
-}
-
-.file-link {
   font-weight: bold;
   margin: 0.4em;
   padding: 0.4em;
@@ -66,8 +46,6 @@
 </style>
 
 <script>
-import { displayCase } from "@/utils";
-
 export default {
   name: "Sidebar",
   props: {
@@ -93,18 +71,6 @@ export default {
         .toLowerCase()
         .replace(/ /gi, "-")
         .replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`;
-    },
-    fileDisplay(file) {
-      try {
-        return displayCase(
-          file.name
-            .split(".")
-            .slice(0, -1)
-            .join(".")
-        );
-      } catch (e) {
-        return "";
-      }
     },
   },
 };

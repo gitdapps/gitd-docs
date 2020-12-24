@@ -3,16 +3,30 @@
     <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
     /></router-link>
+
     <div id="nav-stack">
-      <div id="pwd">{{ dirDisplay(pwd || repo) }}</div>
-      <nav id="dir-nav">
-        <router-link
-          v-for="dir in dirs"
-          v-bind:key="dir.url"
-          class="dir-link"
-          v-bind:to="dirHref(dir)"
-          >{{ dirDisplay(dir) }}</router-link
-        >
+      <div id="nav-one">
+        <div id="title" v-bind:class="titleClass" v-on:click="titleClick">
+          {{ entryDisplay(pwd || repo) }}
+          <i class="material-icons">arrow_drop_down</i>
+          <div id="title-popup" v-bind:style="titlePopupStyle">TITLE POPUP</div>
+        </div>
+        <!-- <div>
+          <i v-on:click="up" class="control material-icons">folder_open</i>
+        </div> -->
+      </div>
+      <nav id="nav-two">
+        <i id="subdir" class="material-icons">subdirectory_arrow_right</i>
+        <div id="dir-links">
+          <router-link
+            class="link dir-link"
+            v-bind:class="entryClass(entry)"
+            v-for="entry in dirContent"
+            v-bind:key="entry.url"
+            v-bind:to="entryHref(entry)"
+            >{{ entryDisplay(entry) }}</router-link
+          >
+        </div>
       </nav>
     </div>
   </header>
@@ -21,56 +35,112 @@
 <style scoped>
 #topbar {
   position: fixed;
+  z-index: 10;
   top: 0;
   left: 0;
   width: 100%;
   background: white;
-  overflow: hidden;
   border-bottom: solid 1px #ddd;
   display: flex;
   padding: 0.5em;
   align-items: center;
+  user-select: none;
 }
 
 #avatar,
 #avatar-link {
   height: 3em;
-  position: relative;
-  top: -0.05em;
 }
 
 #avatar-link {
   margin: 0.2em;
 }
-#dir-nav {
-  margin: 0.3em;
+
+#nav-stack {
+  margin: 0 1em;
+}
+
+#nav-one {
+  display: flex;
+}
+
+#title {
+  font-size: 1.2em;
+  text-transform: capitalize;
+  border-radius: 0.4em;
+  padding: 0.2em 0.3em;
+  transition: 0.2s;
+  position: relative;
+}
+
+#title.active,
+#title:hover {
+  background: #eee;
+}
+
+#title i {
+  color: grey;
   position: relative;
   top: 0.1em;
+  font-size: 1em;
+}
+
+#title-popup {
+  position: absolute;
+  background: white;
+  width: 300px;
+  height: 500px;
+  border-radius: 0.4em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  top: 2em;
+  left: 0;
+  border: solid 1px lightgrey;
+}
+
+.control {
+  padding: 0.2em;
+  border-radius: 0.2em;
+  transition: 0.2s;
+  margin: 0 0.2em;
+  color: #555;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+#nav-two {
+  display: flex;
+}
+
+#dir-links {
+  margin-top: 0.3em;
+  white-space: nowrap;
+  left: 40px;
 }
 
 .dir-link {
-  font-weight: bold;
-  margin: 0.3em;
-  padding: 0.3em;
+  font-size: 0.9em;
+  margin: 0 0.1em;
+}
+
+.dir-link.active,
+.dir-link.active:hover {
+  background: black;
+  color: white;
+  cursor: default;
+}
+
+.link:hover,
+.control:hover {
+  background: #eee;
+}
+
+.link {
+  padding: 0.2em 0.3em;
   transition: 0.2s;
-  color: #333;
+  color: black;
   text-decoration: none;
   border-radius: 0.4em;
   text-transform: capitalize;
-}
-
-#pwd {
-  font-size: 1.2em;
-  font-weight: 100;
-  text-transform: capitalize;
-  margin: 0 0.5em;
-  padding: 0 0.2em;
-  position: relative;
-  top: -0.1em;
-}
-
-.dir-link:hover {
-  background: lightgrey;
 }
 </style>
 
@@ -79,13 +149,23 @@ import { displayCase } from "@/utils";
 
 export default {
   name: "Topbar",
+  data() {
+    return {
+      titlePopupStyle: {
+        display: "none",
+      },
+      titleClass: {
+        active: false,
+      },
+    };
+  },
   computed: {
     repo() {
       try {
         let { owner, repo } = this.$route.params;
         return this.$store.state.repos[owner][repo];
       } catch (e) {
-        return null;
+        return undefined;
       }
     },
     pwd() {
@@ -128,10 +208,10 @@ export default {
           );
         }
       } catch (e) {
-        return null;
+        return undefined;
       }
     },
-    dirs() {
+    dirContent() {
       try {
         let {
           params: { owner, repo, path },
@@ -151,18 +231,23 @@ export default {
           ];
         }
 
-        return content.filter(
-          ({ type, name }) => type === "dir" && !name.startsWith(".")
-        );
+        return content.filter(({ type, name }) => {
+          let hidden = name.startsWith("."),
+            index = name === "index.md",
+            mdFile = type === "file" && name.toLowerCase().endsWith(".md"),
+            dir = type === "dir";
+
+          return !hidden && !index && (dir || mdFile);
+        });
       } catch (e) {
-        return null;
+        return undefined;
       }
     },
     avatarSrc() {
       try {
         return this.repo.owner.avatar_url;
       } catch (e) {
-        return null;
+        return undefined;
       }
     },
     avatarHref() {
@@ -174,15 +259,28 @@ export default {
     },
   },
   methods: {
-    dirDisplay({ name } = {}) {
-      return displayCase(name);
+    titleClick() {
+      let popupOpen = this.titlePopupStyle.display !== "none";
+
+      this.titlePopupStyle.display = popupOpen ? "none" : undefined;
+      this.titleClass.active = !popupOpen;
     },
-    dirHref(dir) {
+    entryDisplay({ name } = {}) {
+      return name
+        ? displayCase(name.replace(/\.[^/.]+$/, "")).trim()
+        : undefined;
+    },
+    entryHref(entry) {
       try {
-        return `/${this.repo.full_name}/${dir.path}`;
+        return `/${this.repo.full_name}/${entry.path}`;
       } catch (e) {
-        return null;
+        return "#";
       }
+    },
+    entryClass(entry) {
+      return {
+        active: this.$route.params.path === entry.path,
+      };
     },
   },
 };

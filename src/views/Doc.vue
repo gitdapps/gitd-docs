@@ -127,7 +127,9 @@ export default {
           return [];
         }
 
-        return content.filter((e) => e.name !== "index.md");
+        return content.filter(
+          ({ type, name }) => type === "file" && name !== "index.md"
+        );
       } catch (e) {
         return undefined;
       }
