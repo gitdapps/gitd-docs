@@ -1,4 +1,4 @@
-# gitd
+# gitd-docs
 
 ## Project setup
 
