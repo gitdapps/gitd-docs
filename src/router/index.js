@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Doc from "../views/Doc.vue";
+import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
+  },
+  {
+    path: "*",
+    name: "Home",
+    component: Home,
   },
 ];
 
