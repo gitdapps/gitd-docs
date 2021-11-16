@@ -1,21 +1,22 @@
 <template>
   <header id="topbar">
-    <router-link id="avatar-link" v-bind:to="avatarHref"
+    <!-- TOPBAR -->
+    <!-- <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
-    /></router-link>
+    /></router-link> -->
 
-    <div id="nav-stack">
+    <!-- <div id="nav-stack">
       <div id="nav-one">
         <div id="title" v-bind:class="titleClass" v-on:click="titleClick">
           {{ entryDisplay(pwd || repo) }}
           <i class="material-icons">arrow_drop_down</i>
           <div id="title-popup" v-bind:style="titlePopupStyle">TITLE POPUP</div>
         </div>
-        <!-- <div>
+        <div>
           <i v-on:click="up" class="control material-icons">folder_open</i>
         </div> -->
-      </div>
-      <nav id="nav-two">
+      <!-- </div> -->
+      <!-- <nav id="nav-two">
         <i id="subdir" class="material-icons">subdirectory_arrow_right</i>
         <div id="dir-links">
           <router-link
@@ -28,23 +29,22 @@
           >
         </div>
       </nav>
-    </div>
+    </div> -->
   </header>
 </template>
 
 <style scoped>
 #topbar {
   position: fixed;
-  z-index: 10;
   top: 0;
-  left: 0;
   width: 100%;
-  background: white;
-  border-bottom: solid 1px #ddd;
+  border-bottom: solid 1px #eee;
   display: flex;
-  padding: 0.5em;
+  padding: 1em;
   align-items: center;
   user-select: none;
+  background: white;
+  min-height: 1em;
 }
 
 #avatar,

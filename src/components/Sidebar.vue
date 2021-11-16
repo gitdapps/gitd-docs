@@ -1,6 +1,7 @@
 <template>
   <nav id="sidebar">
-    <router-link
+    <!-- SIDEBAR -->
+    <!-- <router-link
       class="heading-link"
       v-for="heading in headings"
       v-bind:key="heading.text"
@@ -9,19 +10,23 @@
       v-bind:to="headingFragment(heading)"
     >
       {{ headingDisplay(heading) }}
-    </router-link>
+    </router-link> -->
   </nav>
 </template>
 
 <style scoped>
 #sidebar {
   position: fixed;
-  top: 80px;
-  bottom: 20px;
-  left: 30px;
+  top: 0;
+  bottom: 0;
+  left: 0;
   overflow-y: scroll;
-  width: 250px;
+  width: 13em;
   z-index: 1;
+  background: #eee;
+  border-right: solid 1px #ccc;
+  padding: 1em;
+  padding-top: 4em;
 }
 
 .heading-link {

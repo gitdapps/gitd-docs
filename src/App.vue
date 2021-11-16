@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <topbar id="topbar"></topbar>
     <sidebar id="sidebar"></sidebar>
+    <topbar id="topbar"></topbar>
     <router-view id="view" />
   </div>
 </template>
@@ -15,10 +15,11 @@
 }
 
 body {
-  margin-top: 50px;
-  background: #f6f8fa;
-  padding: 30px 300px;
-  height: 100%;
+  margin: 0;
+  /* background: #f6f8fa; */
+  background: #fdfdfd;
+  padding: 3em 0 0 15em;
+  margin-top: 1px;
 }
 
 html {
