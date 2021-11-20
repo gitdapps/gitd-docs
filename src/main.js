@@ -11,13 +11,13 @@ Vue.config.productionTip = false;
 //   "https://isaiahsimpson-gitdapps-gitd-docs-wpw6gqwr2vjqw-5000.githubpreview.dev";
 
 const boot = () => {
-  history.replaceState &&
-    history.replaceState(
-      null,
-      "",
-      location.pathname +
-        location.search.replace(/[?&]code=[^&]+/, "").replace(/^&/, "?")
-    );
+  // history.replaceState &&
+  //   history.replaceState(
+  //     null,
+  //     "",
+  //     location.pathname +
+  //       location.search.replace(/[?&]code=[^&]+/, "").replace(/^&/, "?")
+  //   );
 
   new Vue({
     router,

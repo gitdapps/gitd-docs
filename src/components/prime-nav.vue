@@ -1,8 +1,7 @@
 <template>
-  <nav id="sidebar">
+  <nav id="prime-nav">
     <span class="gitd-logo">GITD</span>
-    SIDEBAR
-    <!-- SIDEBAR -->
+    nav-bar
     <!-- <router-link
       class="heading-link"
       v-for="heading in headings"
@@ -17,7 +16,7 @@
 </template>
 
 <style scoped>
-#sidebar {
+#prime-nav {
   background: #eee;
   border-right: solid 1px #ccc;
   padding: 1em;
@@ -47,7 +46,7 @@
 
 <script>
 export default {
-  name: "Sidebar",
+  name: "prime-nav",
   props: {
     headings: Array,
     files: Array,

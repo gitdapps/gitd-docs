@@ -32,9 +32,11 @@ const actions = {};
 // root mutations
 const mutations = {
   setGitHubAccessToken(state, newToken) {
-    localStorage.setItem("gitHubAccessToken", newToken);
-    state.gitHubAccessToken = newToken;
-    state.octokit = initOctokit(newToken);
+    if (newToken) {
+      localStorage.setItem("gitHubAccessToken", newToken);
+      state.gitHubAccessToken = newToken;
+      state.octokit = initOctokit(newToken);
+    }
   },
 };
 

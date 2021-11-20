@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: "Page",
+  name: "page",
   props: {
     contentHtml: String,
   },

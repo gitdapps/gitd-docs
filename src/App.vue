@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <sign-in-modal id="sign-in-modal" />
+    <settings-dialog />
     <div id="app-container">
-      <sidebar id="sidebar"></sidebar>
-      <topbar id="topbar"></topbar>
+      <prime-nav />
+      <tool-menu />
       <router-view id="view" />
     </div>
   </div>
@@ -33,12 +33,17 @@ html {
 }
 
 .gitd-btn {
-  font-family: "Bungee";
+  font-family: "Outfit", sans-serif;
+  text-transform: uppercase;
   border: solid 2px black;
-  padding: 0.5em;
+  padding: 0.25em 0.5em;
   border-radius: 0.5em;
   user-select: none;
   cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  background: transparent;
+  font-size: 1.1em;
 }
 
 .gitd-logo {
@@ -48,16 +53,16 @@ html {
 </style>
 
 <script>
-import Topbar from "@/components/Topbar.vue";
-import Sidebar from "@/components/Sidebar.vue";
-import SignInModal from "@/components/SignInModal.vue";
+import ToolMenu from "@/components/tool-menu.vue";
+import PrimeNav from "@/components/prime-nav.vue";
+import SettingsDialog from "@/components/settings-dialog.vue";
 
 export default {
   name: "App",
   components: {
-    Topbar,
-    Sidebar,
-    SignInModal,
+    ToolMenu,
+    PrimeNav,
+    SettingsDialog,
   },
   // watch: {
   //   async $route() {

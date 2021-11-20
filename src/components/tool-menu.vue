@@ -1,7 +1,6 @@
 <template>
-  <header id="topbar">
-    TOPBAR
-    <!-- TOPBAR -->
+  <menu id="tool-menu">
+    tool-menu
     <!-- <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
     /></router-link> -->
@@ -31,11 +30,11 @@
         </div>
       </nav>
     </div> -->
-  </header>
+  </menu>
 </template>
 
 <style scoped>
-#topbar {
+#tool-menu {
   border-bottom: solid 1px #eee;
   display: flex;
   padding: 1em;
@@ -146,7 +145,7 @@
 import { displayCase } from "@/utils";
 
 export default {
-  name: "Topbar",
+  name: "tool-menu",
   data() {
     return {
       titlePopupStyle: {

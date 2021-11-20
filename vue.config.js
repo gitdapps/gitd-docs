@@ -2,9 +2,10 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map",
     devServer: {
-      allowedHosts: [
-        ".githubpreview.dev",
-      ],
+      proxy: {
+        "/github-access-token": { target: "http://localhost:5000" },
+      },
+      allowedHosts: [".githubpreview.dev"],
     },
   },
 };

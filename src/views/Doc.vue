@@ -1,10 +1,10 @@
 <template>
   <div class="doc">
-    <sidebar
+    <!-- <sidebar
       id="sidebar"
       v-bind:headings="docRendering.headings"
       v-bind:files="files"
-    ></sidebar>
+    ></sidebar> -->
     <page id="page" v-bind:contentHtml="docRendering.html"></page>
     <div id="btm-spacer"></div>
   </div>
@@ -29,8 +29,8 @@ import DOMPurify from "dompurify";
 
 import router from "@/router";
 
-import Sidebar from "@/components/Sidebar.vue";
-import Page from "@/components/Page.vue";
+// import Sidebar from "@/components/Sidebar.vue";
+import Page from "@/components/page.vue";
 
 document.addEventListener("click", (e) => {
   if (_.includes(document.querySelectorAll(".page a"), e.target)) {
@@ -55,7 +55,7 @@ export default {
     reference: String,
   },
   components: {
-    Sidebar,
+    // Sidebar,
     Page,
   },
   computed: {

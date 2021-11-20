@@ -12,7 +12,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import GithubUser from "@/components/GithubUser.vue";
+import GithubUser from "@/components/github-user.vue";
 
 export default {
   name: "Settings",
