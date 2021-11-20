@@ -1,5 +1,7 @@
 <template>
   <nav id="sidebar">
+    <span class="gitd-logo">GITD</span>
+    SIDEBAR
     <!-- SIDEBAR -->
     <!-- <router-link
       class="heading-link"
@@ -16,17 +18,10 @@
 
 <style scoped>
 #sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  overflow-y: scroll;
-  width: 13em;
-  z-index: 1;
   background: #eee;
   border-right: solid 1px #ccc;
   padding: 1em;
-  padding-top: 4em;
+  height: 100vh;
 }
 
 .heading-link {

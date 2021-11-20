@@ -1,5 +1,6 @@
 <template>
   <header id="topbar">
+    TOPBAR
     <!-- TOPBAR -->
     <!-- <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
@@ -35,16 +36,13 @@
 
 <style scoped>
 #topbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
   border-bottom: solid 1px #eee;
   display: flex;
   padding: 1em;
+  height: 1em;
   align-items: center;
   user-select: none;
   background: white;
-  min-height: 1em;
 }
 
 #avatar,

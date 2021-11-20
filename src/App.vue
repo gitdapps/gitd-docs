@@ -1,8 +1,11 @@
 <template>
   <div id="app">
-    <sidebar id="sidebar"></sidebar>
-    <topbar id="topbar"></topbar>
-    <router-view id="view" />
+    <sign-in-modal id="sign-in-modal" />
+    <div id="app-container">
+      <sidebar id="sidebar"></sidebar>
+      <topbar id="topbar"></topbar>
+      <router-view id="view" />
+    </div>
   </div>
 </template>
 
@@ -14,28 +17,47 @@
   height: 100%;
 }
 
+#app-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
 body {
   margin: 0;
   /* background: #f6f8fa; */
   background: #fdfdfd;
-  padding: 3em 0 0 15em;
-  margin-top: 1px;
 }
 
 html {
   height: 100%;
+}
+
+.gitd-btn {
+  font-family: "Bungee";
+  border: solid 2px black;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  user-select: none;
+  cursor: pointer;
+}
+
+.gitd-logo {
+  font-family: "Zen Tokyo Zoo";
+  font-size: 2em;
 }
 </style>
 
 <script>
 import Topbar from "@/components/Topbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import SignInModal from "@/components/SignInModal.vue";
 
 export default {
   name: "App",
   components: {
     Topbar,
     Sidebar,
+    SignInModal,
   },
   // watch: {
   //   async $route() {
