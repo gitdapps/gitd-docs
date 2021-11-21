@@ -1,7 +1,14 @@
 <template>
   <nav id="prime-nav">
-    <span class="gitd-logo">GITD</span>
-    nav-bar
+    <menu class="gitd-menu" id="app-menu">
+      <span class="gitd-logo">GITD</span>
+      <img
+        id="avatar"
+        v-if="authenticated"
+        v-bind:src="authenticated.avatar_url"
+        @click="openSettingsDialog"
+      />
+    </menu>
     <!-- <router-link
       class="heading-link"
       v-for="heading in headings"
@@ -17,10 +24,21 @@
 
 <style scoped>
 #prime-nav {
+  display: flex;
+  flex-direction: column;
   background: #eee;
   border-right: solid 1px #ccc;
-  padding: 1em;
   height: 100vh;
+}
+
+#app-menu {
+  justify-content: space-between;
+}
+
+#avatar {
+  height: 2em;
+  border-radius: 2em;
+  cursor: pointer;
 }
 
 .heading-link {
@@ -45,13 +63,21 @@
 </style>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "prime-nav",
   props: {
     headings: Array,
     files: Array,
   },
+  computed: {
+    ...mapGetters("users", ["authenticated"]),
+  },
   methods: {
+    openSettingsDialog() {
+      this.$store.dispatch("dialogs/openDialog", "SETTINGS");
+    },
     headingClass(heading) {
       return {
         active: this.$route.hash === this.headingFragment(heading),

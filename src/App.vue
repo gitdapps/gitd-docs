@@ -3,8 +3,7 @@
     <settings-dialog />
     <div id="app-container">
       <prime-nav />
-      <tool-menu />
-      <router-view id="view" />
+      <content-main />
     </div>
   </div>
 </template>
@@ -35,36 +34,53 @@ html {
 .gitd-btn {
   font-family: "Outfit", sans-serif;
   text-transform: uppercase;
-  border: solid 2px black;
-  padding: 0.25em 0.5em;
-  border-radius: 0.5em;
+  border: solid 1px black;
+  padding: 0 0.5em;
+  border-radius: 1em;
   user-select: none;
   cursor: pointer;
-  font-weight: bold;
   white-space: nowrap;
-  background: transparent;
+  background: black;
   font-size: 1.1em;
+  color: white;
+}
+
+.gitd-i-btn {
+  user-select: none;
+  cursor: pointer;
 }
 
 .gitd-logo {
   font-family: "Zen Tokyo Zoo";
-  font-size: 2em;
+  font-size: 1.5em;
+  text-transform: uppercase;
+}
+
+.gitd-menu {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  user-select: none;
+  height: 1em;
+  padding: 1em;
 }
 </style>
 
 <script>
-import ToolMenu from "@/components/tool-menu.vue";
 import PrimeNav from "@/components/prime-nav.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
+import ContentMain from "./components/content-main.vue";
 
 export default {
   name: "App",
   components: {
-    ToolMenu,
     PrimeNav,
     SettingsDialog,
+    ContentMain,
   },
   // watch: {
+
   //   async $route() {
   //     return this.update();
   //   },

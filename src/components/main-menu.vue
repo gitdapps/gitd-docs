@@ -1,5 +1,5 @@
 <template>
-  <menu id="tool-menu">
+  <menu class="gitd-menu" id="main-menu">
     tool-menu
     <!-- <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
@@ -15,8 +15,8 @@
         <div>
           <i v-on:click="up" class="control material-icons">folder_open</i>
         </div> -->
-      <!-- </div> -->
-      <!-- <nav id="nav-two">
+    <!-- </div> -->
+    <!-- <nav id="nav-two">
         <i id="subdir" class="material-icons">subdirectory_arrow_right</i>
         <div id="dir-links">
           <router-link
@@ -34,13 +34,8 @@
 </template>
 
 <style scoped>
-#tool-menu {
+#main-menu {
   border-bottom: solid 1px #eee;
-  display: flex;
-  padding: 1em;
-  height: 1em;
-  align-items: center;
-  user-select: none;
   background: white;
 }
 
@@ -145,7 +140,7 @@
 import { displayCase } from "@/utils";
 
 export default {
-  name: "tool-menu",
+  name: "main-menu",
   data() {
     return {
       titlePopupStyle: {
