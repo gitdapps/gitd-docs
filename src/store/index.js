@@ -14,6 +14,7 @@ const initOctokit = (auth) =>
 // initial root state
 const state = () => ({
   octokit: initOctokit(localStorage.getItem("gitHubAccessToken")),
+  gitHubAccessToken: localStorage.getItem("gitHubAccessToken"),
 });
 
 // root getters
@@ -22,7 +23,7 @@ const getters = {
     return state.octokit;
   },
   gitHubAccessToken() {
-    return localStorage.getItem("gitHubAccessToken");
+    return state.gitHubAccessToken;
   },
 };
 

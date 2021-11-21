@@ -36,7 +36,7 @@ html {
   text-transform: uppercase;
   border: solid 1px black;
   padding: 0 0.5em;
-  border-radius: 1em;
+  border-radius: .25em;
   user-select: none;
   cursor: pointer;
   white-space: nowrap;

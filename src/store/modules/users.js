@@ -18,6 +18,8 @@ const actions = {
       const { data: authenticated } = await octokit.users.getAuthenticated();
       commit("setAuthenticated", authenticated);
       return authenticated;
+    } else {
+      commit("setAuthenticated", null);
     }
   },
 };
@@ -26,7 +28,10 @@ const actions = {
 const mutations = {
   setAuthenticated(state, newAuthenticated) {
     state.authenticated = newAuthenticated;
-    state.byUsername[newAuthenticated.login] = newAuthenticated;
+
+    if (newAuthenticated) {
+      state.byUsername[newAuthenticated.login] = newAuthenticated;
+    }
   },
 };
 
