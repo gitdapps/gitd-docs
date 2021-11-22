@@ -24,6 +24,8 @@
 
 <style scoped>
 #prime-nav {
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: column;
   background: #eee;

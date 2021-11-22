@@ -13,9 +13,13 @@ const getters = {
 // actions
 const actions = {
   async openDialog({ commit }, name) {
+    document.body.style.overflow = "hidden";
+
     commit("setOpen", name);
   },
   async closeDialog({ commit }) {
+    document.body.style.overflow = "";
+
     commit("setOpen", null);
   },
 };

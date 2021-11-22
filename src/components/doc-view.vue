@@ -1,25 +1,21 @@
 <template>
-  <div class="doc">
-    <!-- <sidebar
-      id="sidebar"
-      v-bind:headings="docRendering.headings"
-      v-bind:files="files"
-    ></sidebar> -->
+  <main id="doc-view">
+    <doc-menu />
     <page id="page" v-bind:contentHtml="docRendering.html"></page>
-    <div id="btm-spacer"></div>
-  </div>
+    <!-- <div id="btm-spacer"></div> -->
+  </main>
 </template>
 
 <style scoped>
-.doc {
+/* #doc-view {
   height: 100%;
   padding-bottom: 30px;
-  margin-bottom: 300px;
-}
-
+  margin-bottom: 300px; 
+} */
+/* 
 #btm-spacer {
   height: 100%;
-}
+} */
 </style>
 
 <script>
@@ -28,8 +24,7 @@ import marked from "marked";
 import DOMPurify from "dompurify";
 
 import router from "@/router";
-
-// import Sidebar from "@/components/Sidebar.vue";
+import DocMenu from "@/components/doc-menu.vue";
 import Page from "@/components/page.vue";
 
 document.addEventListener("click", (e) => {
@@ -47,7 +42,7 @@ document.addEventListener("click", (e) => {
 });
 
 export default {
-  name: "Doc",
+  name: "doc-view",
   props: {
     owner: String,
     repository: String,
@@ -55,7 +50,7 @@ export default {
     reference: String,
   },
   components: {
-    // Sidebar,
+    DocMenu,
     Page,
   },
   computed: {

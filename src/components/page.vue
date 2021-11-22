@@ -1,16 +1,11 @@
 <template>
-  <div class="page" v-html="contentHtml"></div>
+  <div id="page" v-html="contentHtml"></div>
 </template>
 
 <style>
-.page {
-  border-radius: 2px;
-  box-shadow: 0px 0px 3px 0px #aaa;
-  width: 900px;
-  margin: auto;
-  padding: 30px;
-  background: white;
-  overflow: hidden;
+#page {
+  min-width: 40em;
+  padding: 1em;
 }
 </style>
 

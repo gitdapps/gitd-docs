@@ -3,13 +3,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 0;
+  left: 0;
+  z-index: 10;
   bottom: 0;
   width: 100%;
   height: 100%;
-  background: rgba(200, 200, 200, 0.5);
-  backdrop-filter: blur(0.25em);
+  background: rgba(104, 104, 104, 0.5);
+  backdrop-filter: blur(0.5em);
 }
 
 dialog {
@@ -61,7 +63,12 @@ dialog {
 </style>
 
 <template>
-  <div id="settings-dialog" v-if="open === 'SETTINGS'" @click="done">
+  <div
+    id="settings-dialog"
+    v-if="open === 'SETTINGS'"
+    @click="done"
+    @scroll.stop
+  >
     <dialog open @click.stop>
       <span id="authenticated-card" v-if="authenticated">
         <img id="avatar" v-bind:src="authenticated.avatar_url" /><br />
@@ -137,7 +144,7 @@ export default {
           location.pathname +
             location.search.replace(/[?&]code=[^&]+/, "").replace(/^&/, "?")
         );
-      } catch {
+      } catch (e) {
         console.log("failed to connect github");
       }
     }

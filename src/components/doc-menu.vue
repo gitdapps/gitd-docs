@@ -1,6 +1,5 @@
 <template>
-  <menu class="gitd-menu" id="main-menu">
-    tool-menu
+  <menu class="gitd-menu" id="doc-menu">
     <!-- <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
     /></router-link> -->
@@ -34,9 +33,14 @@
 </template>
 
 <style scoped>
-#main-menu {
+#doc-menu {
   border-bottom: solid 1px #eee;
-  background: white;
+  /* background: white; */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(0.5em);
 }
 
 #avatar,
@@ -140,7 +144,7 @@
 import { displayCase } from "@/utils";
 
 export default {
-  name: "main-menu",
+  name: "doc-menu",
   data() {
     return {
       titlePopupStyle: {

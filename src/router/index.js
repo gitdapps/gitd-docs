@@ -1,15 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Doc from "../views/Doc.vue";
-import Home from "../views/Home.vue";
+import DocView from "@/components/doc-view.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/:owner/:repo/:path*",
-    name: "Doc",
-    component: Doc,
+    name: "doc-view",
+    component: DocView,
     props(route) {
       let {
         params: { owner, repo, path },
@@ -24,16 +23,10 @@ const routes = [
       };
     },
   },
-  {
-    path: "*",
-    name: "Home",
-    component: Home,
-  },
 ];
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
