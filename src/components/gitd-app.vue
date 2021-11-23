@@ -1,6 +1,7 @@
 <template>
   <div id="gitd-app">
     <settings-dialog />
+    <jump-dialog />
     <div id="gitd-grid">
       <prime-nav />
       <router-view id="view" />
@@ -64,17 +65,23 @@ html {
   height: 1em;
   padding: 1em;
 }
+
+.gitd-menu-spacer {
+  flex-grow: 1;
+}
 </style>
 
 <script>
 import PrimeNav from "@/components/prime-nav.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
+import JumpDialog from "@/components/jump-dialog.vue";
 
 export default {
   name: "gitd-app",
   components: {
     PrimeNav,
     SettingsDialog,
+    JumpDialog,
   },
   watch: {
     async $route() {

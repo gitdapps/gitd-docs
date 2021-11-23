@@ -1,5 +1,6 @@
 import Vue from "vue";
-import Gitd from "./components/gitd.vue";
+import VueShortkey from "vue-shortkey";
+import GitdApp from "./components/gitd-app.vue";
 import router from "./router";
 import store from "./store";
 
@@ -9,8 +10,10 @@ const boot = () => {
   new Vue({
     router,
     store,
-    render: (h) => h(Gitd),
+    render: (h) => h(GitdApp),
   }).$mount("#gitd-app");
 };
+
+Vue.use(VueShortkey);
 
 boot();

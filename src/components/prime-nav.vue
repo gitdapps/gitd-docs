@@ -1,7 +1,20 @@
 <template>
   <nav id="prime-nav">
+    <!-- invisible shortkey-only action -->
+    <span
+      style="visibility:hidden"
+      v-shortkey="['esc']"
+      @shortkey="closeDialog"
+    />
     <menu class="gitd-menu" id="app-menu">
       <span class="gitd-logo">GITD</span>
+      <span class="gitd-menu-spacer" />
+      <i
+        class="fas fa-search gitd-i-btn"
+        v-shortkey="['meta', 'k']"
+        @click="toggleJumpDialog"
+        @shortkey="toggleJumpDialog"
+      />
       <img
         id="avatar"
         v-if="authenticated"
@@ -9,7 +22,7 @@
         @click="openSettingsDialog"
       />
     </menu>
-    <!-- <router-link
+    <router-link
       class="heading-link"
       v-for="heading in headings"
       v-bind:key="heading.text"
@@ -18,7 +31,7 @@
       v-bind:to="headingFragment(heading)"
     >
       {{ headingDisplay(heading) }}
-    </router-link> -->
+    </router-link>
   </nav>
 </template>
 
@@ -34,7 +47,8 @@
 }
 
 #app-menu {
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 1em;
 }
 
 #avatar {
@@ -75,10 +89,21 @@ export default {
   },
   computed: {
     ...mapGetters("users", ["authenticated"]),
+    ...mapGetters("dialogs", ["open"]),
   },
   methods: {
     openSettingsDialog() {
       this.$store.dispatch("dialogs/openDialog", "SETTINGS");
+    },
+    toggleJumpDialog() {
+      if (this.open === "JUMP") {
+        this.$store.dispatch("dialogs/closeDialog");
+      } else {
+        this.$store.dispatch("dialogs/openDialog", "JUMP");
+      }
+    },
+    closeDialog() {
+      this.$store.dispatch("dialogs/closeDialog");
     },
     headingClass(heading) {
       return {
