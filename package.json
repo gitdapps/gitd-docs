@@ -8,30 +8,30 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@octokit/rest": "^18.0.9",
+    "@octokit/rest": "^18.12.0",
     "axios": "^0.24.0",
-    "core-js": "^3.6.5",
+    "core-js": "^3.19.1",
     "cors": "^2.8.5",
-    "dompurify": "^2.2.2",
+    "dompurify": "^2.3.3",
     "express": "^4.17.1",
     "lodash": "^4.17.21",
-    "marked": "^1.2.5",
+    "marked": "^4.0.4",
     "path": "^0.12.7",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0",
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.3",
     "vue-shortkey": "^3.1.7",
-    "vuex": "^3.4.0"
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-babel": "^4.5.15",
+    "@vue/cli-plugin-eslint": "^4.5.15",
+    "@vue/cli-plugin-router": "^4.5.15",
+    "@vue/cli-plugin-vuex": "^4.5.15",
+    "@vue/cli-service": "^4.5.15",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.1.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
     "root": true,

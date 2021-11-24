@@ -1,5 +1,5 @@
 <template>
-  <menu class="gitd-menu" id="doc-menu">
+  <menu class="gitd-menu">
     <!-- <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
     /></router-link> -->
@@ -33,9 +33,8 @@
 </template>
 
 <style scoped>
-#doc-menu {
+menu {
   border-bottom: solid 1px #eee;
-  /* background: white; */
   position: sticky;
   top: 0;
   z-index: 2;

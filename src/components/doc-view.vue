@@ -1,11 +1,16 @@
 <template>
-  <main id="doc-view">
+  <main>
     <doc-menu />
-    <md-article id="md-article" v-bind:md-content="mdContent"></md-article>
+    <md-article v-bind:md-content="mdContent"></md-article>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  height: 100vh;
+  overflow: scroll;
+}
+</style>
 
 <script>
 import _ from "lodash";

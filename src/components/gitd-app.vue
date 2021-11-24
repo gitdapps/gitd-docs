@@ -4,33 +4,27 @@
     <jump-dialog />
     <div id="gitd-grid">
       <prime-nav />
-      <router-view id="view" />
+      <router-view />
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 #gitd-app {
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
+  background: #fdfdfd;
 }
 
 #gitd-grid {
   display: grid;
   grid-template-columns: 20em 2fr;
 }
+</style>
 
-body {
-  margin: 0;
-  background: #fdfdfd;
-}
-
-html {
-  height: 100%;
-}
-
+<style>
 .gitd-btn {
   font-family: "Outfit", sans-serif;
   text-transform: uppercase;

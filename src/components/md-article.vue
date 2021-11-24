@@ -1,12 +1,12 @@
 <template>
-  <article id="md-article" v-html="contentHtml"></article>
+  <article v-html="contentHtml"></article>
 </template>
 
 <style scoped></style>
 
 <script>
 import _ from "lodash";
-import marked from "marked";
+import { marked } from 'marked';
 import DOMPurify from "dompurify";
 
 export default {
@@ -29,7 +29,7 @@ export default {
 
       let headings = [],
         html = DOMPurify.sanitize(
-          marked(atob(this.mdContent.content), {
+          marked.parse(atob(this.mdContent.content), {
             baseUrl,
             headerPrefix: "heading-",
             walkTokens(token) {
