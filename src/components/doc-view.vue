@@ -1,7 +1,7 @@
 <template>
   <main>
     <doc-menu />
-    <md-article v-bind:md-content="mdContent"></md-article>
+    <doc-article v-bind:doc="doc"></doc-article>
   </main>
 </template>
 
@@ -17,7 +17,7 @@ import _ from "lodash";
 
 import router from "@/router";
 import DocMenu from "@/components/doc-menu.vue";
-import MdArticle from "@/components/md-article.vue";
+import DocArticle from "@/components/doc-article.vue";
 
 document.addEventListener("click", (e) => {
   if (_.includes(document.querySelectorAll(".page a"), e.target)) {
@@ -43,10 +43,10 @@ export default {
   },
   components: {
     DocMenu,
-    MdArticle,
+    DocArticle,
   },
   computed: {
-    mdContent() {
+    doc() {
       let { owner, repository: repo, reference: ref, path } = this;
 
       try {
@@ -55,18 +55,9 @@ export default {
           ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`;
         }
 
-        let mdContent = this.$store.state.content[owner][repo][ref][path];
-
-        if (Array.isArray(mdContent)) {
-          // we're dealing with a directory, try to use the index.md file
-          mdContent = this.$store.state.content[owner][repo][ref][
-            mdContent.find(({ path }) => path.endsWith("index.md")).path
-          ];
-        }
-
-        return mdContent;
+        return this.$store.state.docs[owner][repo][ref][path];
       } catch (e) {
-        return undefined;
+        return null;
       }
     },
     files() {

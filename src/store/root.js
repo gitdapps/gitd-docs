@@ -7,6 +7,7 @@ import users from "./modules/users";
 import repos from "./modules/repos";
 import content from "./modules/content";
 import dialogs from "./modules/dialogs";
+import docs from "./modules/docs";
 
 const initOctokit = (auth) =>
   auth ? new Octokit({ auth, userAgent: "GiTD Dev" }) : null;
@@ -84,6 +85,14 @@ const actions = {
       }
     }
 
+    await store.dispatch("docs/parse", {
+      owner,
+      repo,
+      ref,
+      path,
+      contentBlob: content.content,
+    });
+
     commit("setAt", { owner, repo, path, ref });
 
     return { content };
@@ -138,7 +147,7 @@ const store = new Vuex.Store({
   getters,
   actions,
   mutations,
-  modules: { users, repos, content, dialogs },
+  modules: { users, repos, content, dialogs, docs },
 });
 
 store.watch(
