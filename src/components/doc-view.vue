@@ -1,7 +1,7 @@
 <template>
   <main>
     <doc-menu />
-    <doc-article v-bind:doc="doc"></doc-article>
+    <doc-article v-bind:doc="doc" />
   </main>
 </template>
 
