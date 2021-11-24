@@ -95,75 +95,27 @@ export default {
         query: { ref },
       } = this.$route;
 
-      // make sure repo is in the store, capture the default branch in case we need it later
-      let { default_branch: defaultBranch } = await this.$store.dispatch(
-        "repos/fetchRepo",
-        {
-          owner,
-          repo,
-        }
-      );
-
-      ref = ref || `heads/${defaultBranch}`; // if the ref isnt specified in route, fall back to repo default branch
-
-      // if the path isnt in the route, push the default markdown path to the route
       if (path.endsWith("index.md")) {
         // redirect "index.md" to directory url
         this.$router.push(`/${owner}/${repo}/${path.replace("/index.md", "")}`);
-      } else {
-        // if we have a good path in the route, fetch the content
-        let content = await this.$store.dispatch("content/fetchContent", {
-          owner,
-          repo,
-          ref,
-          path,
-        });
+        return;
+      }
 
-        if (Array.isArray(content)) {
-          // we're dealing with a directory
-          // first, try to use an index.md file
-          let indexContent = content.find(({ path }) =>
-            path.endsWith("index.md")
-          );
+      let { content } = await this.$store.dispatch("go", {
+        owner,
+        repo,
+        path,
+        ref,
+      });
 
-          if (indexContent) {
-            // fetch the index
-            await this.$store.dispatch("content/fetchContent", {
-              owner,
-              repo,
-              ref,
-              path: indexContent.path,
-            });
-          } else {
-            // if there is no index, redirect to first markdown file
-            let firstMk = content.find(({ path }) => path.endsWith(".md"));
+      if (Array.isArray(content)) {
+        // if content isn't a single file, redirect to best markdown file we can find
+        let firstMd = content.find(({ path }) => /.md$/i.test(path)),
+          readmeMd = content.find(({ path }) => /readme\.md$/i.test(path));
 
-            if (firstMk) {
-              this.$router.push(`/${owner}/${repo}/${firstMk.path}`);
-            }
-          }
+        if (firstMd || readmeMd) {
+          this.$router.push(`/${owner}/${repo}/${(readmeMd || firstMd).path}`);
         }
-
-        // fetch the directory content
-        await this.$store.dispatch("content/fetchContent", {
-          owner,
-          repo,
-          ref,
-          path: path
-            .split("/")
-            .slice(0, -1)
-            .join("/"),
-        });
-
-        await this.$store.dispatch("content/fetchContent", {
-          owner,
-          repo,
-          ref,
-          path: path
-            .split("/")
-            .slice(0, -2)
-            .join("/"),
-        });
       }
     },
   },

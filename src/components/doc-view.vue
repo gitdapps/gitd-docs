@@ -1,31 +1,18 @@
 <template>
   <main id="doc-view">
     <doc-menu />
-    <page id="page" v-bind:contentHtml="docRendering.html"></page>
-    <!-- <div id="btm-spacer"></div> -->
+    <md-article id="md-article" v-bind:md-content="mdContent"></md-article>
   </main>
 </template>
 
-<style scoped>
-/* #doc-view {
-  height: 100%;
-  padding-bottom: 30px;
-  margin-bottom: 300px; 
-} */
-/* 
-#btm-spacer {
-  height: 100%;
-} */
-</style>
+<style scoped></style>
 
 <script>
 import _ from "lodash";
-import marked from "marked";
-import DOMPurify from "dompurify";
 
 import router from "@/router";
 import DocMenu from "@/components/doc-menu.vue";
-import Page from "@/components/page.vue";
+import MdArticle from "@/components/md-article.vue";
 
 document.addEventListener("click", (e) => {
   if (_.includes(document.querySelectorAll(".page a"), e.target)) {
@@ -51,10 +38,10 @@ export default {
   },
   components: {
     DocMenu,
-    Page,
+    MdArticle,
   },
   computed: {
-    docContent() {
+    mdContent() {
       let { owner, repository: repo, reference: ref, path } = this;
 
       try {
@@ -63,49 +50,19 @@ export default {
           ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`;
         }
 
-        let docContent = this.$store.state.content[owner][repo][ref][path];
+        let mdContent = this.$store.state.content[owner][repo][ref][path];
 
-        if (Array.isArray(docContent)) {
+        if (Array.isArray(mdContent)) {
           // we're dealing with a directory, try to use the index.md file
-          docContent = this.$store.state.content[owner][repo][ref][
-            docContent.find(({ path }) => path.endsWith("index.md")).path
+          mdContent = this.$store.state.content[owner][repo][ref][
+            mdContent.find(({ path }) => path.endsWith("index.md")).path
           ];
         }
 
-        return docContent;
+        return mdContent;
       } catch (e) {
         return undefined;
       }
-    },
-    docRendering() {
-      if (this.docContent) {
-        let baseUrl;
-
-        if (this.docContent.path.endsWith("index.md")) {
-          // we're rendering an index page, so we'll need to specify baseUrl
-          baseUrl = `${_.nth(this.docContent.path.split("/"), -2)}/`;
-        }
-
-        let headings = [],
-          html = DOMPurify.sanitize(
-            marked(atob(this.docContent.content), {
-              baseUrl,
-              headerPrefix: "heading-",
-              walkTokens(token) {
-                if (token.type === "heading") {
-                  headings.push(token);
-                }
-              },
-            }),
-            { ADD_TAGS: ["router-link"], ADD_ATTR: ["to"] }
-          );
-        return {
-          html,
-          headings,
-        };
-      }
-
-      return {};
     },
     files() {
       let { owner, repository: repo, reference: ref, path } = this;

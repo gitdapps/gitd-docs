@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueShortkey from "vue-shortkey";
 import GitdApp from "./components/gitd-app.vue";
 import router from "./router";
-import store from "./store";
+import store from "./store/root.js";
 
 Vue.config.productionTip = false;
 
