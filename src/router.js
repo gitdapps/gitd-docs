@@ -3,7 +3,7 @@ import DocView from "@/components/doc-view.vue";
 import HomeView from "@/components/home-view.vue";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
