@@ -26,6 +26,7 @@ export const useGithubStore = defineStore("github", {
         authenticated: null,
         byUsername: {},
       },
+      refs: {},
     };
   },
   getters: {
@@ -51,48 +52,45 @@ export const useGithubStore = defineStore("github", {
       this.users.authenticated = null;
     },
     async fetchContent({ owner, repo, ref, path }) {
-      let ret = _.get(this, [owner, repo, ref, path]);
+      let ret = _.get(this.content, [owner, repo, ref, path]);
 
       if (_.isNil(ret) && this.octokit) {
-        let { data } = await this.octokit.repos.getContent({
+        ret = await this.octokit.repos.getContent({
           owner,
           repo,
           ref,
           path,
-        });
+        }).data;
 
-        if (!this.content[owner]) {
-          this.content[owner] = {};
-        }
-
-        if (!this.content[owner][repo]) {
-          this.content[owner][repo] = {};
-        }
-
-        if (!this.content[owner][repo][ref]) {
-          this.content[owner][repo][ref] = {};
-        }
-
-        this.content[owner][repo][ref][path] = data;
-
-        ret = data;
+        _.set(this.content, [owner, repo, ref, path], ret);
       }
 
       return ret;
     },
     async fetchRepo({ owner, repo }) {
-      let ret = _.get(this.repos, `[${owner}][${repo}]`);
+      let ret = _.get(this.repos, [owner, repo]);
 
-      if (!ret && this.octokit) {
-        let { data } = await this.octokit.repos.get({ owner, repo });
+      if (_.isNil(ret) && this.octokit) {
+        ret = (await this.octokit.repos.get({ owner, repo })).data;
 
-        if (!this.repos[owner]) {
-          this.repos[owner] = {};
-        }
+        _.set(this.repos, [owner, repo], ret);
+      }
 
-        this.repos[owner][repo] = data;
+      return ret;
+    },
+    async fetchRef({ owner, repo, ref }) {
+      let ret = _.get(this.refs, [owner, repo, ref]);
 
-        ret = data;
+      if (_.isNil(ret) && this.octokit) {
+        ret = (
+          await this.octokit.git.getRef({
+            owner,
+            repo,
+            ref,
+          })
+        ).data;
+
+        _.set(this.refs, [owner, repo, ref], ret);
       }
 
       return ret;
