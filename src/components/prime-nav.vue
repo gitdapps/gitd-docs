@@ -71,53 +71,56 @@
 }
 </style>
 
-<script>
-import { mapGetters } from "vuex";
+<script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useGithubStore } from "@/stores/github";
+import { useDialogsStore } from "@/stores/dialogs";
 import DocToc from "@/components/doc-toc.vue";
 
-export default {
-  name: "prime-nav",
-  props: {
-    headings: Array,
-    files: Array,
-  },
-  components: {
-    DocToc,
-  },
-  computed: {
-    ...mapGetters("users", ["authenticated"]),
-    ...mapGetters("dialogs", ["open"]),
-    doc() {
-      let { owner, repo, path } = this.$route.params,
-        { ref } = this.$route.query;
+const dialogsStore = useDialogsStore(),
+  // props = defineProps({
+  //     headings: Array,
+  //     files: Array,
+  //   }),
+  route = useRoute(),
+  githubStore = useGithubStore(),
+  doc = computed(() => {
+    let { owner, repo, path } = route.params,
+      { ref } = route.query;
 
-      try {
-        if (!ref) {
-          // fall back to repo default branch if ref not specified
-          ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`;
-        }
-
-        return this.$store.state.docs[owner][repo][ref][path];
-      } catch (e) {
-        return null;
+    try {
+      if (!ref) {
+        // fall back to repo default branch if ref not specified
+        ref = `heads/${githubStore.repos[owner][repo].default_branch}`;
       }
-    },
-  },
+      return githubStore.docs[owner][repo][ref][path];
+    } catch (e) {
+      return null;
+    }
+  });
 
-  methods: {
-    openSettingsDialog() {
-      this.$store.dispatch("dialogs/openDialog", "SETTINGS");
-    },
-    toggleJumpDialog() {
-      if (this.open === "JUMP") {
-        this.$store.dispatch("dialogs/closeDialog");
-      } else {
-        this.$store.dispatch("dialogs/openDialog", "JUMP");
-      }
-    },
-    closeDialog() {
-      this.$store.dispatch("dialogs/closeDialog");
-    },
-  },
-};
+//   computed: {
+//     // ...mapGetters("users", ["authenticated"]),
+//     // ...mapGetters("dialogs", ["open"]),
+//     doc() {
+
+//     },
+//   },
+
+function openSettingsDialog() {
+  dialogsStore.openDialog("SETTINGS");
+}
+
+//     function toggleJumpDialog() {
+//       if (this.open === "JUMP") {
+//         this.$store.dispatch("dialogs/closeDialog");
+//       } else {
+//         this.$store.dispatch("dialogs/openDialog", "JUMP");
+//       }
+//     }
+
+function closeDialog() {
+  dialogsStore.closeDialog();
+}
 </script>

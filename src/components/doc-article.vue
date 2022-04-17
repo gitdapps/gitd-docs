@@ -4,38 +4,34 @@
 
 <style scoped></style>
 
-<script>
-export default {
-  name: "doc-article",
-  props: {
-    doc: Object,
-  },
-  computed: {
-    docHtml() {
-      return this.doc ? this.doc.html : "";
-    },
-  },
-  methods: {
-    scrollToHash(hash) {
-      this.$nextTick(() => {
-        let el = document.querySelector(`#heading-${hash.substring(1)}`);
+<script setup>
+import { computed, nextTick, onUpdated, watch } from "vue";
+import { useRoute } from "vue-router";
 
-        if (el) {
-          window.scroll({
-            top: el.getBoundingClientRect().top + window.pageYOffset - 80,
-            behavior: "smooth",
-          });
-        }
+const route = useRoute(),
+  props = defineProps(["doc"]),
+  docHtml = computed(() => {
+    return props.doc ? props.doc.html : "";
+  });
+
+function scrollToHash(hash) {
+  nextTick(() => {
+    let el = document.querySelector(`#heading-${hash.substring(1)}`);
+
+    if (el) {
+      window.scroll({
+        top: el.getBoundingClientRect().top + window.pageYOffset - 80,
+        behavior: "smooth",
       });
-    },
-  },
-  watch: {
-    $route({ hash }) {
-      this.scrollToHash(hash);
-    },
-  },
-  updated() {
-    this.scrollToHash(this.$route.hash);
-  },
-};
+    }
+  });
+}
+
+watch(route, ({ hash }) => {
+  scrollToHash(hash);
+});
+
+onUpdated(() => {
+  scrollToHash(route.hash);
+});
 </script>

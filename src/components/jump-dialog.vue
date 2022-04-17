@@ -39,24 +39,17 @@ dialog {
 
 <template>
   <div id="jump-dialog" v-if="open === 'JUMP'" @click="done">
-    <dialog open @click.stop>
-      JUMP
-    </dialog>
+    <dialog open @click.stop>JUMP</dialog>
   </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
+<script setup>
+function done() {
+  // this.$store.dispatch("dialogs/closeDialog");
+}
 
-export default {
-  name: "jump-dialog",
-  methods: {
-    done() {
-      this.$store.dispatch("dialogs/closeDialog");
-    },
-  },
-  computed: {
-    ...mapGetters("dialogs", ["open"]),
-  },
-};
+//   computed: {
+//     // ...mapGetters("dialogs", ["open"]),
+//   },
+// };
 </script>

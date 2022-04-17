@@ -13,39 +13,38 @@
   </div>
 </template>
 
-<style scoped></style>
+<script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
-<script>
-export default {
-  name: "doc-toc",
-  props: {
+const route = useRoute(),
+  props = defineProps({
     doc: Object,
-  },
-  computed: {
-    headings() {
-      return this.doc ? this.doc.headings : "";
-    },
-  },
-  methods: {
-    headingClass(heading) {
-      return {
-        active: this.$route.hash === this.headingFragment(heading),
-      };
-    },
-    headingStyle(heading) {
-      return {
-        "padding-left": `${heading.depth}em`,
-      };
-    },
-    headingDisplay(heading) {
-      return heading.raw.replace(/#/gi, "").substring(1);
-    },
-    headingFragment(heading) {
-      return `#${this.headingDisplay(heading)
-        .toLowerCase()
-        .replace(/ /gi, "-")
-        .replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`;
-    },
-  },
-};
+  }),
+  headings = computed(() => {
+    return props.doc ? props.doc.headings : "";
+  });
+
+function headingClass(heading) {
+  return {
+    active: route.hash === this.headingFragment(heading),
+  };
+}
+
+function headingStyle(heading) {
+  return {
+    "padding-left": `${heading.depth}em`,
+  };
+}
+
+function headingDisplay(heading) {
+  return heading.raw.replace(/#/gi, "").substring(1);
+}
+
+function headingFragment(heading) {
+  return `#${this.headingDisplay(heading)
+    .toLowerCase()
+    .replace(/ /gi, "-")
+    .replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`;
+}
 </script>

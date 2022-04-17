@@ -65,56 +65,49 @@
 }
 </style>
 
-<script>
+<script setup>
+import { watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import { useFocusStore } from "@/stores/focus";
 import PrimeNav from "@/components/prime-nav.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import JumpDialog from "@/components/jump-dialog.vue";
 
-export default {
-  name: "gitd-app",
-  components: {
-    PrimeNav,
-    SettingsDialog,
-    JumpDialog,
-  },
-  watch: {
-    async $route() {
-      return this.update();
-    },
-  },
-  methods: {
-    async update() {
-      let {
-        params: { owner, repo, path = "" },
-        query: { ref },
-      } = this.$route;
+const route = useRoute(),
+  router = useRouter(),
+  focusStore = useFocusStore();
 
-      if (path.endsWith("index.md")) {
-        // redirect "index.md" to directory url
-        this.$router.push(`/${owner}/${repo}/${path.replace("/index.md", "")}`);
-        return;
-      }
+async function update() {
+  let {
+    params: { owner, repo, path = "" },
+    query: { ref },
+  } = route;
 
-      let { content } = await this.$store.dispatch("go", {
-        owner,
-        repo,
-        path,
-        ref,
-      });
+  if (path.endsWith("index.md")) {
+    // redirect "index.md" to directory url
+    router.push(`/${owner}/${repo}/${path.replace("/index.md", "")}`);
+    return;
+  }
 
-      if (Array.isArray(content)) {
-        // if content isn't a single file, redirect to best markdown file we can find
-        let firstMd = content.find(({ path }) => /.md$/i.test(path)),
-          readmeMd = content.find(({ path }) => /readme\.md$/i.test(path));
+  let { content } = focusStore.go({
+    owner,
+    repo,
+    path,
+    ref,
+  });
 
-        if (firstMd || readmeMd) {
-          this.$router.push(`/${owner}/${repo}/${(readmeMd || firstMd).path}`);
-        }
-      }
-    },
-  },
-  async mounted() {
-    return this.update();
-  },
-};
+  if (Array.isArray(content)) {
+    // if content isn't a single file, redirect to best markdown file we can find
+    let firstMd = content.find(({ path }) => /.md$/i.test(path)),
+      readmeMd = content.find(({ path }) => /readme\.md$/i.test(path));
+
+    if (firstMd || readmeMd) {
+      router.push(`/${owner}/${repo}/${(readmeMd || firstMd).path}`);
+    }
+  }
+}
+
+onMounted(update);
+watch(route, update);
 </script>

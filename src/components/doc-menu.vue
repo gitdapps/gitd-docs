@@ -1,10 +1,11 @@
 <template>
   <menu class="gitd-menu">
-    <!-- <router-link id="avatar-link" v-bind:to="avatarHref"
+    <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
-    /></router-link> -->
+    /></router-link>
+    -->
 
-    <!-- <div id="nav-stack">
+    <div id="nav-stack">
       <div id="nav-one">
         <div id="title" v-bind:class="titleClass" v-on:click="titleClick">
           {{ entryDisplay(pwd || repo) }}
@@ -13,9 +14,10 @@
         </div>
         <div>
           <i v-on:click="up" class="control material-icons">folder_open</i>
-        </div> -->
-    <!-- </div> -->
-    <!-- <nav id="nav-two">
+        </div>
+        -->
+      </div>
+      <nav id="nav-two">
         <i id="subdir" class="material-icons">subdirectory_arrow_right</i>
         <div id="dir-links">
           <router-link
@@ -28,7 +30,7 @@
           >
         </div>
       </nav>
-    </div> -->
+    </div>
   </menu>
 </template>
 
@@ -139,144 +141,125 @@ menu {
 }
 </style>
 
-<script>
+<script setup>
 import { displayCase } from "@/utils";
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useGithubStore } from "@/stores/github";
 
-export default {
-  name: "doc-menu",
-  data() {
-    return {
-      titlePopupStyle: {
-        display: "none",
-      },
-      titleClass: {
-        active: false,
-      },
-    };
-  },
-  computed: {
-    repo() {
-      try {
-        let { owner, repo } = this.$route.params;
-        return this.$store.state.repos[owner][repo];
-      } catch (e) {
-        return undefined;
-      }
-    },
-    pwd() {
-      try {
-        let {
-          params: { owner, repo, path },
-          query: {
-            ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`,
-          },
-        } = this.$route;
+const route = useRoute(),
+  githubStore = useGithubStore(),
+  titlePopupStyle = ref({ display: "none" }),
+  titleClass = ref({ active: false }),
+  repo = computed(() => {
+    try {
+      let { owner, repo } = route;
+      return githubStore.repos[owner][repo];
+    } catch (e) {
+      return undefined;
+    }
+  }),
+  pwd = computed(() => {
+    try {
+      let {
+        params: { owner, repo, path },
+        query: {
+          ref = `heads/${githubStore.repos[owner][repo].default_branch}`,
+        },
+      } = this.$route;
 
-        let content = this.$store.state.content[owner][repo][ref][path];
+      let content = githubStore.content[owner][repo][ref][path];
 
-        let parentContent = this.$store.state.content[owner][repo][ref][
-          path
-            .split("/")
-            .slice(0, -1)
-            .join("/")
+      let parentContent =
+        githubStore.content[owner][repo][ref][
+          path.split("/").slice(0, -1).join("/")
         ];
 
-        let grandParentContent = this.$store.state.content[owner][repo][ref][
-          path
-            .split("/")
-            .slice(0, -2)
-            .join("/")
+      let grandParentContent =
+        githubStore.content[owner][repo][ref][
+          path.split("/").slice(0, -2).join("/")
         ];
 
-        if (Array.isArray(content)) {
-          // showing a directory
-          return parentContent.find((e) => e.path === path);
-        } else {
-          // showing a file
-          return grandParentContent.find(
-            (e) =>
-              e.path ===
-              path
-                .split("/")
-                .slice(0, -1)
-                .join("/")
-          );
-        }
-      } catch (e) {
-        return undefined;
+      if (Array.isArray(content)) {
+        // showing a directory
+        return parentContent.find((e) => e.path === path);
+      } else {
+        // showing a file
+        return grandParentContent.find(
+          (e) => e.path === path.split("/").slice(0, -1).join("/")
+        );
       }
-    },
-    dirContent() {
-      try {
-        let {
-          params: { owner, repo, path },
-          query: {
-            ref = `heads/${this.$store.state.repos[owner][repo].default_branch}`,
-          },
-        } = this.$route;
+    } catch (e) {
+      return undefined;
+    }
+  }),
+  dirContent = computed(() => {
+    try {
+      let {
+        params: { owner, repo, path },
+        query: {
+          ref = `heads/${githubStore.repos[owner][repo].default_branch}`,
+        },
+      } = this.$route;
 
-        let content = this.$store.state.content[owner][repo][ref][path];
+      let content = githubStore.content[owner][repo][ref][path];
 
-        if (!Array.isArray(content)) {
-          content = this.$store.state.content[owner][repo][ref][
-            path
-              .split("/")
-              .slice(0, -1)
-              .join("/")
+      if (!Array.isArray(content)) {
+        content =
+          githubStore.content[owner][repo][ref][
+            path.split("/").slice(0, -1).join("/")
           ];
-        }
+      }
 
-        return content.filter(({ type, name }) => {
-          let hidden = name.startsWith("."),
-            index = name === "index.md",
-            mdFile = type === "file" && name.toLowerCase().endsWith(".md"),
-            dir = type === "dir";
+      return content.filter(({ type, name }) => {
+        let hidden = name.startsWith("."),
+          index = name === "index.md",
+          mdFile = type === "file" && name.toLowerCase().endsWith(".md"),
+          dir = type === "dir";
 
-          return !hidden && !index && (dir || mdFile);
-        });
-      } catch (e) {
-        return undefined;
-      }
-    },
-    avatarSrc() {
-      try {
-        return this.repo.owner.avatar_url;
-      } catch (e) {
-        return undefined;
-      }
-    },
-    avatarHref() {
-      try {
-        return `/${this.repo.full_name}`;
-      } catch (e) {
-        return "#";
-      }
-    },
-  },
-  methods: {
-    titleClick() {
-      let popupOpen = this.titlePopupStyle.display !== "none";
+        return !hidden && !index && (dir || mdFile);
+      });
+    } catch (e) {
+      return undefined;
+    }
+  }),
+  avatarSrc = computed(() => {
+    try {
+      return repo.value.owner.avatar_url;
+    } catch (e) {
+      return undefined;
+    }
+  }),
+  avatarHref = computed(() => {
+    try {
+      return `/${repo.value.full_name}`;
+    } catch (e) {
+      return "#";
+    }
+  });
 
-      this.titlePopupStyle.display = popupOpen ? "none" : undefined;
-      this.titleClass.active = !popupOpen;
-    },
-    entryDisplay({ name } = {}) {
-      return name
-        ? displayCase(name.replace(/\.[^/.]+$/, "")).trim()
-        : undefined;
-    },
-    entryHref(entry) {
-      try {
-        return `/${this.repo.full_name}/${entry.path}`;
-      } catch (e) {
-        return "#";
-      }
-    },
-    entryClass(entry) {
-      return {
-        active: this.$route.params.path === entry.path,
-      };
-    },
-  },
-};
+function titleClick() {
+  let popupOpen = titlePopupStyle.value.display !== "none";
+
+  titlePopupStyle.value.display = popupOpen ? "none" : undefined;
+  titleClass.value.active = !popupOpen;
+}
+
+function entryDisplay({ name } = {}) {
+  return name ? displayCase(name.replace(/\.[^/.]+$/, "")).trim() : undefined;
+}
+
+function entryHref(entry) {
+  try {
+    return `/${this.repo.full_name}/${entry.path}`;
+  } catch (e) {
+    return "#";
+  }
+}
+
+function entryClass(entry) {
+  return {
+    active: this.$route.params.path === entry.path,
+  };
+}
 </script>

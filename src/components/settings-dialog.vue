@@ -119,76 +119,55 @@ dialog {
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from "vuex";
+<script setup>
+import { computed, onMounted, ref } from "vue";
+import { useGithubStore } from "@/stores/github";
+import { useDialogsStore } from "@/stores/dialogs";
 
-const clientId = "6cec68d5949ad85f6574";
-
-export default {
-  name: "settings-dialog",
-  async mounted() {
-    if (!this.gitHubAccessToken) {
-      console.log("not authenticated");
-      this.$store.dispatch("dialogs/openDialog", "SETTINGS");
-    }
-
-    const code = new URLSearchParams(location.search).get("code");
-
-    if (code) {
-      try {
-        await this.connectGitHub(code);
-
-        history.replaceState(
-          null,
-          "",
-          location.pathname +
-            location.search.replace(/[?&]code=[^&]+/, "").replace(/^&/, "?")
-        );
-      } catch (e) {
-        console.log("failed to connect github");
-      }
-    }
-  },
-  data() {
-    return { tokenInputStyle: { visibility: "hidden" } };
-  },
-  methods: {
-    ghConnect() {
-      window.location = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=repo,read:user,read:discussion,write:discussion`;
-    },
-    ghDisconnect() {
-      this.hideToken();
-      this.disconnectGitHub();
-    },
-    toggleToken() {
-      this.tokenInputStyle.visibility =
-        this.tokenInputStyle.visibility === "hidden" ? "visible" : "hidden";
-    },
-    showToken() {
-      this.tokenInputStyle.visibility = "visible";
-    },
-    hideToken() {
-      this.tokenInputStyle.visibility = "hidden";
-    },
-    done() {
-      this.hideToken();
-      if (this.authenticated) {
-        this.$store.dispatch("dialogs/closeDialog");
-      }
-    },
-    ...mapActions(["connectGitHub", "disconnectGitHub"]),
-  },
-  computed: {
-    ...mapGetters("users", ["authenticated"]),
-    ...mapGetters("dialogs", ["open"]),
-    gitHubAccessToken: {
+const dialogsStore = useDialogsStore,
+  githubStore = useGithubStore(),
+  tokenInputStyle = ref({ visibility: "hidden" }),
+  gitHubAccessToken = computed(() => {
+    return {
       get() {
-        return this.$store.state.gitHubAccessToken;
+        return githubStore.accessToken;
       },
       set(value) {
-        this.$store.commit("setGitHubAccessToken", value);
+        githubStore.accessToken = value;
       },
-    },
-  },
-};
+    };
+  });
+
+onMounted(async () => {
+  if (!this.gitHubAccessToken) {
+    console.log("not authenticated");
+    dialogsStore.openDialog("SETTINGS");
+  }
+});
+
+function ghDisconnect() {
+  hideToken();
+  githubStore.disconnectGitHub();
+}
+
+function toggleToken() {
+  tokenInputStyle.value.visibility =
+    tokenInputStyle.value.visibility === "hidden" ? "visible" : "hidden";
+}
+
+// function showToken() {
+//   tokenInputStyle.value.visibility = "visible";
+// }
+
+function hideToken() {
+  tokenInputStyle.value.visibility = "hidden";
+}
+
+function done() {
+  hideToken();
+
+  if (this.authenticated) {
+    this.$store.dispatch("dialogs/closeDialog");
+  }
+}
 </script>

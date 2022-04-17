@@ -16,9 +16,6 @@ img {
 }
 </style>
 
-<script>
-export default {
-  name: "GithubUser",
-  props: { user: Object },
-};
+<script setup>
+defineProps({ user: Object });
 </script>

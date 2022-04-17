@@ -1,19 +1,9 @@
-import Vue from "vue";
-import VueShortkey from "vue-shortkey";
-import GitdApp from "./components/gitd-app.vue";
-import router from "./router.js";
-import store from "./store/root.js";
+import { createApp } from "vue";
+import GitdApp from "@/components/gitd-app.vue";
+import router from "@/router";
 
-Vue.config.productionTip = false;
+const app = createApp(GitdApp);
 
-const boot = () => {
-  new Vue({
-    router,
-    store,
-    render: (h) => h(GitdApp),
-  }).$mount("#gitd-app");
-};
+app.use(router);
 
-Vue.use(VueShortkey);
-
-boot();
+app.mount("#gitd-app");
