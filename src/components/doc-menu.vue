@@ -3,7 +3,6 @@
     <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
     /></router-link>
-    -->
 
     <div id="nav-stack">
       <div id="nav-one">
@@ -15,7 +14,6 @@
         <div>
           <i v-on:click="up" class="control material-icons">folder_open</i>
         </div>
-        -->
       </div>
       <nav id="nav-two">
         <i id="subdir" class="material-icons">subdirectory_arrow_right</i>
@@ -142,7 +140,6 @@ menu {
 </style>
 
 <script setup>
-import { displayCase } from "@/utils";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useGithubStore } from "@/stores/github";
@@ -246,7 +243,7 @@ function titleClick() {
 }
 
 function entryDisplay({ name } = {}) {
-  return name ? displayCase(name.replace(/\.[^/.]+$/, "")).trim() : undefined;
+  return name;
 }
 
 function entryHref(entry) {

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Octokit } from "@octokit/rest";
+import { Octokit } from "https://cdn.skypack.dev/octokit";
 
 import { defineStore } from "pinia";
 

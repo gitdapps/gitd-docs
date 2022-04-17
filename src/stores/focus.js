@@ -12,6 +12,10 @@ export const useFocusStore = defineStore("focus", {
       const githubStore = useGithubStore(),
         docsStore = useDocsStore();
 
+      if (!githubStore.accessToken) {
+        return {};
+      }
+
       // make sure repo is in the store
       let { default_branch: defaultBranch } = await githubStore.fetchRepo({
         owner,

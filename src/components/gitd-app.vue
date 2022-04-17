@@ -3,7 +3,7 @@
     <settings-dialog />
     <jump-dialog />
     <div id="gitd-grid">
-      <prime-nav />
+      <!-- <prime-nav /> -->
       <router-view />
     </div>
   </div>
@@ -70,7 +70,7 @@ import { watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useFocusStore } from "@/stores/focus";
-import PrimeNav from "@/components/prime-nav.vue";
+// import PrimeNav from "@/components/prime-nav.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
 import JumpDialog from "@/components/jump-dialog.vue";
 
@@ -90,7 +90,7 @@ async function update() {
     return;
   }
 
-  let { content } = focusStore.go({
+  let { content } = focusStore.look({
     owner,
     repo,
     path,

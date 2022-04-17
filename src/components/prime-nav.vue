@@ -22,9 +22,9 @@
         @click="openSettingsDialog"
       />
     </menu>
-    <div>
+    <!-- <div>
       <doc-toc v-bind:doc="doc" />
-    </div>
+    </div> -->
   </nav>
 </template>
 
@@ -73,8 +73,8 @@
 
 <script setup>
 import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { useGithubStore } from "@/stores/github";
+// import { useRoute } from "vue-router";
+// import { useGithubStore } from "@/stores/github";
 import { useDialogsStore } from "@/stores/dialogs";
 import DocToc from "@/components/doc-toc.vue";
 
@@ -83,21 +83,23 @@ const dialogsStore = useDialogsStore(),
   //     headings: Array,
   //     files: Array,
   //   }),
-  route = useRoute(),
-  githubStore = useGithubStore(),
+  // route = useRoute(),
+  // githubStore = useGithubStore(),
   doc = computed(() => {
-    let { owner, repo, path } = route.params,
-      { ref } = route.query;
+    // let { owner, repo, path } = route.params,
+    //   { ref } = route.query;
 
-    try {
-      if (!ref) {
-        // fall back to repo default branch if ref not specified
-        ref = `heads/${githubStore.repos[owner][repo].default_branch}`;
-      }
-      return githubStore.docs[owner][repo][ref][path];
-    } catch (e) {
-      return null;
-    }
+    // try {
+    //   if (!ref) {
+    //     // fall back to repo default branch if ref not specified
+    //     ref = `heads/${githubStore.repos[owner][repo].default_branch}`;
+    //   }
+    //   return githubStore.docs[owner][repo][ref][path];
+    // } catch (e) {
+    //   return null;
+    // }
+
+    return null;
   });
 
 //   computed: {

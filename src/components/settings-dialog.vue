@@ -139,7 +139,7 @@ const dialogsStore = useDialogsStore,
   });
 
 onMounted(async () => {
-  if (!this.gitHubAccessToken) {
+  if (!gitHubAccessToken) {
     console.log("not authenticated");
     dialogsStore.openDialog("SETTINGS");
   }
