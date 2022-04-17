@@ -1,9 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DocView from "@/components/doc-view.vue";
+import HomeView from "@/components/home-view.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    {
+      path: "/",
+      name: "home-view",
+      component: HomeView,
+    },
     {
       path: "/:owner/:repo/:path*",
       name: "doc-view",

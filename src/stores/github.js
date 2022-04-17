@@ -1,44 +1,54 @@
 import _ from "lodash";
 import { Octokit } from "https://cdn.skypack.dev/octokit";
-
 import { defineStore } from "pinia";
 
-const initOctokit = (auth) =>
-  auth ? new Octokit({ auth, userAgent: "gitd" }) : null;
+const GH_PAT_LS_KEY = "githubPersonalAccessToken";
+
+const initOctokit = (personalAccessToken) =>
+  personalAccessToken
+    ? new Octokit({ auth: personalAccessToken, userAgent: "gitd" }).rest
+    : null;
 
 export const useGithubStore = defineStore("github", {
   state: () => {
+    let personalAccessToken = localStorage.getItem(GH_PAT_LS_KEY);
+
     return {
-      octokit: initOctokit(localStorage.getItem("gitHubAccessToken")),
-      accessToken: localStorage.getItem("gitHubAccessToken") || null,
+      octokit: initOctokit(personalAccessToken),
+      auth: personalAccessToken
+        ? {
+            personalAccessToken,
+          }
+        : null,
       content: {},
       repos: {},
+      users: {
+        authenticated: null,
+        byUsername: {},
+      },
     };
   },
   getters: {
-    octokit: (state) => state.octokit,
-    accessToken: (state) => state.accessToken,
+    isConnected: (state) => state.auth && state.octokit,
   },
   actions: {
-    async connectGitHub(code) {
-      try {
-        const response = await fetch(`/github-access-token?code=${code}`);
+    // only supporting personal access tokens for now
+    async connect({ personalAccessToken }) {
+      if (personalAccessToken) {
+        localStorage.setItem(GH_PAT_LS_KEY, personalAccessToken);
+        this.auth = { personalAccessToken };
+        this.octokit = initOctokit(personalAccessToken);
 
-        const { gitHubAccessToken } = await response.json();
-
-        if (gitHubAccessToken) {
-          localStorage.setItem("gitHubAccessToken", gitHubAccessToken);
-          this.accessToken = gitHubAccessToken;
-          this.octokit = initOctokit(gitHubAccessToken);
-        }
-      } catch (e) {
-        console.log("failed to get access token");
+        let { data: authenticated } =
+          await this.octokit.users.getAuthenticated();
+        this.users.authenticated = authenticated;
       }
     },
-    async disconnectGitHub() {
-      localStorage.removeItem("gitHubAccessToken");
-      this.accessToken = null;
+    async disconnect() {
+      localStorage.removeItem(GH_PAT_LS_KEY);
+      this.auth = null;
       this.octokit = null;
+      this.users.authenticated = null;
     },
     async fetchContent({ owner, repo, ref, path }) {
       let ret = _.get(this, [owner, repo, ref, path]);

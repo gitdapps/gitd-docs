@@ -63,55 +63,59 @@ dialog {
 </style>
 
 <template>
-  <div
-    id="settings-dialog"
-    v-if="open === 'SETTINGS'"
-    @click="done"
-    @scroll.stop
-  >
+  <div id="settings-dialog" v-if="open" @click="done" @scroll.stop>
     <dialog open @click.stop>
-      <span id="authenticated-card" v-if="authenticated">
-        <img id="avatar" v-bind:src="authenticated.avatar_url" /><br />
-        <span id="authenticated-name">{{ authenticated.name }}</span
+      <span id="authenticated-card" v-if="authenticatedGithubUser">
+        <img
+          id="avatar"
+          v-bind:src="authenticatedGithubUser.avatar_url"
+        /><br />
+        <span id="authenticated-name">{{ authenticatedGithubUser.name }}</span
         ><br />
         <span id="authenticated-login">
           <i class="fab fa-github" />&nbsp;
-          <a target="blank" v-bind:href="authenticated.html_url">{{
-            authenticated.login
+          <a target="blank" v-bind:href="authenticatedGithubUser.html_url">{{
+            authenticatedGithubUser.login
           }}</a>
         </span>
       </span>
-      <span v-if="!authenticated">
-        You must connect with your GitHub account to use Gitd. Choose "Connect"
-        below to be redirected to GitHub.com to authorize Gitd to access GitHub
-        data using your account, or
+      <span v-if="!authenticatedGithubUser">
+        Gitd works with GitHub, and needs your
         <a
           target="blank"
           @click="toggleToken"
           href="https://github.com/settings/tokens"
-          >provide your token directly</a
-        >.
+          >personal access token</a
+        >
+        to access your data there in order to proceed.
       </span>
 
       <input
         id="gh-token-input"
-        v-bind:style="tokenInputStyle"
-        v-model="gitHubAccessToken"
+        v-model="githubPatInput"
         placeholder="paste your github token here"
       />
 
       <span id="dialog-controls">
         <i class="fas fa-key gitd-i-btn" @click="toggleToken" />
 
-        <button class="gitd-btn" @click="ghConnect" v-if="!authenticated">
+        <button
+          class="gitd-btn"
+          @click="ghConnect"
+          v-if="!authenticatedGithubUser"
+        >
           <i class="fab fa-github" /> connect
         </button>
 
-        <button class="gitd-btn" @click="ghDisconnect" v-if="authenticated">
+        <button
+          class="gitd-btn"
+          @click="ghDisconnect"
+          v-if="authenticatedGithubUser"
+        >
           <i class="fab fa-github" /> disconnect
         </button>
 
-        <button class="gitd-btn" @click="done" v-if="authenticated">
+        <button class="gitd-btn" @click="done" v-if="authenticatedGithubUser">
           done
         </button>
       </span>
@@ -124,50 +128,30 @@ import { computed, onMounted, ref } from "vue";
 import { useGithubStore } from "@/stores/github";
 import { useDialogsStore } from "@/stores/dialogs";
 
-const dialogsStore = useDialogsStore,
+const dialogsStore = useDialogsStore(),
   githubStore = useGithubStore(),
-  tokenInputStyle = ref({ visibility: "hidden" }),
-  gitHubAccessToken = computed(() => {
-    return {
-      get() {
-        return githubStore.accessToken;
-      },
-      set(value) {
-        githubStore.accessToken = value;
-      },
-    };
-  });
+  githubPatInput = ref(""),
+  open = computed(() => dialogsStore.open === "SETTINGS"),
+  authenticatedGithubUser = computed(() => githubStore.users.authenticated);
 
 onMounted(async () => {
-  if (!gitHubAccessToken) {
-    console.log("not authenticated");
+  if (!githubStore.isConnected) {
+    console.log("not connected to github");
     dialogsStore.openDialog("SETTINGS");
   }
 });
 
+function ghConnect() {
+  githubStore.connect({ personalAccessToken: githubPatInput.value });
+}
+
 function ghDisconnect() {
-  hideToken();
-  githubStore.disconnectGitHub();
-}
-
-function toggleToken() {
-  tokenInputStyle.value.visibility =
-    tokenInputStyle.value.visibility === "hidden" ? "visible" : "hidden";
-}
-
-// function showToken() {
-//   tokenInputStyle.value.visibility = "visible";
-// }
-
-function hideToken() {
-  tokenInputStyle.value.visibility = "hidden";
+  githubStore.disconnect();
 }
 
 function done() {
-  hideToken();
-
-  if (this.authenticated) {
-    this.$store.dispatch("dialogs/closeDialog");
+  if (authenticatedGithubUser.value) {
+    dialogsStore.closeDialog();
   }
 }
 </script>

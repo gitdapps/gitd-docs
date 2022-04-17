@@ -6,18 +6,13 @@ export const useDialogsStore = defineStore("dialogs", {
       open: null,
     };
   },
-  getters: {
-    open: (state) => {
-      return state.open;
-    },
-  },
   actions: {
-    async openDialog(name) {
+    openDialog(name) {
       document.body.style.overflow = "hidden";
 
       this.open = name;
     },
-    async closeDialog() {
+    closeDialog() {
       document.body.style.overflow = "";
 
       this.open = null;

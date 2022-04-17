@@ -1,7 +1,7 @@
 <template>
   <div id="gitd-app">
     <settings-dialog />
-    <jump-dialog />
+    <!-- <jump-dialog /> -->
     <div id="gitd-grid">
       <!-- <prime-nav /> -->
       <router-view />
@@ -72,7 +72,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useFocusStore } from "@/stores/focus";
 // import PrimeNav from "@/components/prime-nav.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
-import JumpDialog from "@/components/jump-dialog.vue";
+// import JumpDialog from "@/components/jump-dialog.vue";
 
 const route = useRoute(),
   router = useRouter(),
@@ -108,6 +108,6 @@ async function update() {
   }
 }
 
-onMounted(update);
-watch(route, update);
+// onMounted(update);
+// watch(route, update);
 </script>
