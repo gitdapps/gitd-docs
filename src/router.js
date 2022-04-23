@@ -14,19 +14,19 @@ const router = createRouter({
       path: "/:owner/:repo/:path*",
       name: "doc-view",
       component: DocView,
-      props(route) {
-        let {
-          params: { owner, repo, path },
-          query: { ref },
-        } = route;
+      // props(route) {
+      //   let {
+      //     params: { owner, repo, path },
+      //     query: { ref },
+      //   } = route;
 
-        return {
-          owner,
-          repository: repo,
-          path,
-          reference: ref,
-        };
-      },
+      //   return {
+      //     owner,
+      //     repository: repo,
+      //     path: path.join("/"),
+      //     reference: ref,
+      //   };
+      // },
     },
   ],
 });

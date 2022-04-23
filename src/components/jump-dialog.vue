@@ -44,12 +44,13 @@ dialog {
 </template>
 
 <script setup>
-function done() {
-  // this.$store.dispatch("dialogs/closeDialog");
-}
+import { computed } from "vue";
+import { useDialogsStore } from "@/stores/dialogs";
 
-//   computed: {
-//     // ...mapGetters("dialogs", ["open"]),
-//   },
-// };
+const dialogsStore = useDialogsStore(),
+  open = computed(() => dialogsStore.open === "JUMP");
+
+function done() {
+  dialogsStore.closeDialog();
+}
 </script>

@@ -1,9 +1,9 @@
 <template>
   <div id="gitd-app">
     <settings-dialog />
-    <!-- <jump-dialog /> -->
+    <jump-dialog />
     <div id="gitd-grid">
-      <!-- <prime-nav /> -->
+      <prime-nav />
       <router-view />
     </div>
   </div>
@@ -25,6 +25,10 @@
 </style>
 
 <style>
+body {
+  margin: auto;
+}
+
 .gitd-btn {
   font-family: "Outfit", sans-serif;
   text-transform: uppercase;
@@ -70,9 +74,9 @@ import { watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useFocusStore } from "@/stores/focus";
-// import PrimeNav from "@/components/prime-nav.vue";
+import PrimeNav from "@/components/prime-nav.vue";
 import SettingsDialog from "@/components/settings-dialog.vue";
-// import JumpDialog from "@/components/jump-dialog.vue";
+import JumpDialog from "@/components/jump-dialog.vue";
 
 const route = useRoute(),
   router = useRouter(),
@@ -80,9 +84,11 @@ const route = useRoute(),
 
 async function update() {
   let {
-    params: { owner, repo, path = "" },
+    params: { owner, repo, path = [] },
     query: { ref },
   } = route;
+
+  path = path.join("/");
 
   if (path.endsWith("index.md")) {
     // redirect "index.md" to directory url
@@ -108,6 +114,6 @@ async function update() {
   }
 }
 
-// onMounted(update);
-// watch(route, update);
+onMounted(update);
+watch(route, update);
 </script>
