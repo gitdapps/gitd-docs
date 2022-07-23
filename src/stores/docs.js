@@ -4,7 +4,9 @@ import DOMPurify from "dompurify";
 import { defineStore } from "pinia";
 
 export const useDocsStore = defineStore("docs", {
-  state: () => {},
+  state: () => {
+    return {};
+  },
   actions: {
     async parse({ owner, repo, ref, path, contentBlob }) {
       let baseUrl = "",

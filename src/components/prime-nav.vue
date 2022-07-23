@@ -15,12 +15,12 @@
         @click="toggleJumpDialog"
         @shortkey="toggleJumpDialog"
       />
-      <img
+      <!-- <img
         id="avatar"
         v-if="authenticated"
         v-bind:src="authenticated.avatar_url"
         @click="openSettingsDialog"
-      />
+      /> -->
     </menu>
     <!-- <div>
       <doc-toc v-bind:doc="doc" />

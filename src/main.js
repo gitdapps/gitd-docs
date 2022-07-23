@@ -1,12 +1,14 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import VueShortkey from "vue3-shortkey";
 
 import router from "@/router";
 import GitdApp from "@/components/gitd-app.vue";
 
-const app = createApp(GitdApp);
+const gitdApp = createApp(GitdApp);
 
-app.use(router);
-app.use(createPinia());
+gitdApp.use(VueShortkey);
+gitdApp.use(router);
+gitdApp.use(createPinia());
 
-app.mount("#gitd-app");
+gitdApp.mount("#gitd-app");
