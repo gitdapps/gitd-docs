@@ -44,13 +44,13 @@ dialog {
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useDialogsStore } from "@/stores/dialogs";
+import { computed } from 'vue'
+import { useDialogsStore } from '@/stores/dialogs'
 
 const dialogsStore = useDialogsStore(),
-  open = computed(() => dialogsStore.open === "JUMP");
+  open = computed(() => dialogsStore.open === 'JUMP')
 
 function done() {
-  dialogsStore.closeDialog();
+  dialogsStore.closeDialog()
 }
 </script>

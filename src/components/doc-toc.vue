@@ -14,37 +14,37 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute(),
   props = defineProps({
-    doc: Object,
+    doc: Object
   }),
   headings = computed(() => {
-    return props.doc ? props.doc.headings : "";
-  });
+    return props.doc ? props.doc.headings : ''
+  })
 
 function headingClass(heading) {
   return {
-    active: route.hash === this.headingFragment(heading),
-  };
+    active: route.hash === this.headingFragment(heading)
+  }
 }
 
 function headingStyle(heading) {
   return {
-    "padding-left": `${heading.depth}em`,
-  };
+    'padding-left': `${heading.depth}em`
+  }
 }
 
 function headingDisplay(heading) {
-  return heading.raw.replace(/#/gi, "").substring(1);
+  return heading.raw.replace(/#/gi, '').substring(1)
 }
 
 function headingFragment(heading) {
   return `#${this.headingDisplay(heading)
     .toLowerCase()
-    .replace(/ /gi, "-")
-    .replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`;
+    .replace(/ /gi, '-')
+    .replace(/^[^a-z]+|[^\w:.-]+/gi, '')}`
 }
 </script>

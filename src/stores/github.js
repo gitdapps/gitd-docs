@@ -1,99 +1,104 @@
-import _ from "lodash";
-import { Octokit } from "https://cdn.skypack.dev/octokit";
-import { defineStore } from "pinia";
+import _ from 'lodash'
+import { Octokit } from 'https://esm.sh/octokit'
 
-const GH_PAT_LS_KEY = "githubPersonalAccessToken";
+import { defineStore } from 'pinia'
 
-const initOctokit = (personalAccessToken) =>
-  personalAccessToken
-    ? new Octokit({ auth: personalAccessToken, userAgent: "gitd" }).rest
-    : null;
+function initOctokit(personalAccessToken) {
+  return new Octokit({ auth: personalAccessToken, userAgent: 'gitd' }).rest
+}
 
-export const useGithubStore = defineStore("github", {
+const GH_PAT_LS_KEY = 'githubPersonalAccessToken'
+let octokit = initOctokit(localStorage.getItem(GH_PAT_LS_KEY))
+
+export const useGithubStore = defineStore('github', {
   state: () => {
-    let personalAccessToken = localStorage.getItem(GH_PAT_LS_KEY);
-
     return {
-      octokit: initOctokit(personalAccessToken),
-      auth: personalAccessToken
-        ? {
-            personalAccessToken,
-          }
-        : null,
+      auth: { personalAccessToken: localStorage.getItem(GH_PAT_LS_KEY) },
       content: {},
       repos: {},
       users: {
         authenticated: null,
-        byUsername: {},
+        byUsername: {}
       },
-      refs: {},
-    };
-  },
-  getters: {
-    isConnected: (state) => state.auth && state.octokit,
+      refs: {}
+    }
   },
   actions: {
     // only supporting personal access tokens for now
-    async connect({ personalAccessToken }) {
+    async signIn({ personalAccessToken }) {
       if (personalAccessToken) {
-        localStorage.setItem(GH_PAT_LS_KEY, personalAccessToken);
-        this.auth = { personalAccessToken };
-        this.octokit = initOctokit(personalAccessToken);
+        localStorage.setItem(GH_PAT_LS_KEY, personalAccessToken)
+        this.auth = { personalAccessToken }
+        octokit = initOctokit(personalAccessToken)
 
-        let { data: authenticated } =
-          await this.octokit.users.getAuthenticated();
-        this.users.authenticated = authenticated;
+        let { data: authenticated } = await octokit.users.getAuthenticated()
+        this.users.authenticated = authenticated
       }
     },
-    async disconnect() {
-      localStorage.removeItem(GH_PAT_LS_KEY);
-      this.auth = null;
-      this.octokit = null;
-      this.users.authenticated = null;
+    async signOut() {
+      localStorage.removeItem(GH_PAT_LS_KEY)
+      this.auth = null
+      octokit = initOctokit()
+      this.users.authenticated = null
     },
     async fetchContent({ owner, repo, ref, path }) {
-      let ret = _.get(this.content, [owner, repo, ref, path]);
+      let ret = _.get(this.content, [owner, repo, ref, path])
 
-      if (_.isNil(ret) && this.octokit) {
-        ret = await this.octokit.repos.getContent({
-          owner,
-          repo,
-          ref,
-          path,
-        }).data;
+      if (_.isNil(ret)) {
+        ret = atob(
+          (
+            await octokit.repos.getContent({
+              owner,
+              repo,
+              ref,
+              path
+            })
+          ).data.content
+        )
 
-        _.set(this.content, [owner, repo, ref, path], ret);
+        _.set(this.content, [owner, repo, ref, path], ret)
       }
 
-      return ret;
+      return ret
     },
     async fetchRepo({ owner, repo }) {
-      let ret = _.get(this.repos, [owner, repo]);
+      let ret = _.get(this.repos, [owner, repo])
 
-      if (_.isNil(ret) && this.octokit) {
-        ret = (await this.octokit.repos.get({ owner, repo })).data;
+      if (_.isNil(ret)) {
+        ret = (await octokit.repos.get({ owner, repo })).data
 
-        _.set(this.repos, [owner, repo], ret);
+        _.set(this.repos, [owner, repo], ret)
       }
 
-      return ret;
+      return ret
     },
     async fetchRef({ owner, repo, ref }) {
-      let ret = _.get(this.refs, [owner, repo, ref]);
+      let ret = _.get(this.refs, [owner, repo, ref])
 
-      if (_.isNil(ret) && this.octokit) {
+      if (_.isNil(ret)) {
         ret = (
-          await this.octokit.git.getRef({
+          await octokit.git.getRef({
             owner,
             repo,
-            ref,
+            ref
           })
-        ).data;
+        ).data
 
-        _.set(this.refs, [owner, repo, ref], ret);
+        _.set(this.refs, [owner, repo, ref], ret)
       }
 
-      return ret;
+      return ret
     },
-  },
-});
+    async fetch(url) {
+      let [owner, repo, treeOrBlob, ref, ...path] = url.pathname.substring(1).split('/')
+
+      let theRepo = await this.fetchRepo({ owner, repo })
+
+      if (!ref) {
+        ref = theRepo.default_branch
+      }
+
+      return this.fetchContent({ owner, repo, ref, path: '/' + path.join('/') })
+    }
+  }
+})

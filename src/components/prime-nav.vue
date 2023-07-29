@@ -1,11 +1,7 @@
 <template>
   <nav id="prime-nav">
     <!-- invisible shortkey-only action -->
-    <span
-      style="visibility: hidden"
-      v-shortkey="['esc']"
-      @shortkey="closeDialog"
-    />
+    <span style="visibility: hidden" v-shortkey="['esc']" @shortkey="closeDialog" />
     <menu class="gitd-menu" id="app-menu">
       <span class="gitd-logo">GITD</span>
       <span class="gitd-menu-spacer" />
@@ -72,11 +68,11 @@
 </style>
 
 <script setup>
-import { computed } from "vue";
+import { computed } from 'vue'
 // import { useRoute } from "vue-router";
 // import { useGithubStore } from "@/stores/github";
-import { useDialogsStore } from "@/stores/dialogs";
-import DocToc from "@/components/doc-toc.vue";
+import { useDialogsStore } from '@/stores/dialogs'
+import DocToc from '@/components/doc-toc.vue'
 
 const dialogsStore = useDialogsStore(),
   // props = defineProps({
@@ -99,8 +95,8 @@ const dialogsStore = useDialogsStore(),
     //   return null;
     // }
 
-    return null;
-  });
+    return null
+  })
 
 //   computed: {
 //     // ...mapGetters("users", ["authenticated"]),
@@ -111,7 +107,7 @@ const dialogsStore = useDialogsStore(),
 //   },
 
 function openSettingsDialog() {
-  dialogsStore.openDialog("SETTINGS");
+  dialogsStore.openDialog('SETTINGS')
 }
 
 //     function toggleJumpDialog() {
@@ -123,6 +119,6 @@ function openSettingsDialog() {
 //     }
 
 function closeDialog() {
-  dialogsStore.closeDialog();
+  dialogsStore.closeDialog()
 }
 </script>

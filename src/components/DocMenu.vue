@@ -140,123 +140,110 @@ menu {
 </style>
 
 <script setup>
-import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
-import { useGithubStore } from "@/stores/github";
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useGithubStore } from '@/stores/github'
 
 const route = useRoute(),
   githubStore = useGithubStore(),
-  titlePopupStyle = ref({ display: "none" }),
+  titlePopupStyle = ref({ display: 'none' }),
   titleClass = ref({ active: false }),
   repo = computed(() => {
     try {
-      let { owner, repo } = route;
-      return githubStore.repos[owner][repo];
+      let { owner, repo } = route
+      return githubStore.repos[owner][repo]
     } catch (e) {
-      return undefined;
+      return undefined
     }
   }),
   pwd = computed(() => {
     try {
       let {
         params: { owner, repo, path },
-        query: {
-          ref = `heads/${githubStore.repos[owner][repo].default_branch}`,
-        },
-      } = this.$route;
+        query: { ref = `heads/${githubStore.repos[owner][repo].default_branch}` }
+      } = this.$route
 
-      let content = githubStore.content[owner][repo][ref][path];
+      let content = githubStore.content[owner][repo][ref][path]
 
       let parentContent =
-        githubStore.content[owner][repo][ref][
-          path.split("/").slice(0, -1).join("/")
-        ];
+        githubStore.content[owner][repo][ref][path.split('/').slice(0, -1).join('/')]
 
       let grandParentContent =
-        githubStore.content[owner][repo][ref][
-          path.split("/").slice(0, -2).join("/")
-        ];
+        githubStore.content[owner][repo][ref][path.split('/').slice(0, -2).join('/')]
 
       if (Array.isArray(content)) {
         // showing a directory
-        return parentContent.find((e) => e.path === path);
+        return parentContent.find((e) => e.path === path)
       } else {
         // showing a file
-        return grandParentContent.find(
-          (e) => e.path === path.split("/").slice(0, -1).join("/")
-        );
+        return grandParentContent.find((e) => e.path === path.split('/').slice(0, -1).join('/'))
       }
     } catch (e) {
-      return undefined;
+      return undefined
     }
   }),
   dirContent = computed(() => {
     try {
       let {
         params: { owner, repo, path },
-        query: {
-          ref = `heads/${githubStore.repos[owner][repo].default_branch}`,
-        },
-      } = this.$route;
+        query: { ref = `heads/${githubStore.repos[owner][repo].default_branch}` }
+      } = this.$route
 
-      let content = githubStore.content[owner][repo][ref][path];
+      let content = githubStore.content[owner][repo][ref][path]
 
       if (!Array.isArray(content)) {
-        content =
-          githubStore.content[owner][repo][ref][
-            path.split("/").slice(0, -1).join("/")
-          ];
+        content = githubStore.content[owner][repo][ref][path.split('/').slice(0, -1).join('/')]
       }
 
       return content.filter(({ type, name }) => {
-        let hidden = name.startsWith("."),
-          index = name === "index.md",
-          mdFile = type === "file" && name.toLowerCase().endsWith(".md"),
-          dir = type === "dir";
+        let hidden = name.startsWith('.'),
+          index = name === 'index.md',
+          mdFile = type === 'file' && name.toLowerCase().endsWith('.md'),
+          dir = type === 'dir'
 
-        return !hidden && !index && (dir || mdFile);
-      });
+        return !hidden && !index && (dir || mdFile)
+      })
     } catch (e) {
-      return undefined;
+      return undefined
     }
   }),
   avatarSrc = computed(() => {
     try {
-      return repo.value.owner.avatar_url;
+      return repo.value.owner.avatar_url
     } catch (e) {
-      return undefined;
+      return undefined
     }
   }),
   avatarHref = computed(() => {
     try {
-      return `/${repo.value.full_name}`;
+      return `/${repo.value.full_name}`
     } catch (e) {
-      return "#";
+      return '#'
     }
-  });
+  })
 
 function titleClick() {
-  let popupOpen = titlePopupStyle.value.display !== "none";
+  let popupOpen = titlePopupStyle.value.display !== 'none'
 
-  titlePopupStyle.value.display = popupOpen ? "none" : undefined;
-  titleClass.value.active = !popupOpen;
+  titlePopupStyle.value.display = popupOpen ? 'none' : undefined
+  titleClass.value.active = !popupOpen
 }
 
 function entryDisplay({ name } = {}) {
-  return name;
+  return name
 }
 
 function entryHref(entry) {
   try {
-    return `/${this.repo.full_name}/${entry.path}`;
+    return `/${this.repo.full_name}/${entry.path}`
   } catch (e) {
-    return "#";
+    return '#'
   }
 }
 
 function entryClass(entry) {
   return {
-    active: this.$route.params.path === entry.path,
-  };
+    active: this.$route.params.path === entry.path
+  }
 }
 </script>

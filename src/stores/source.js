@@ -1,44 +1,42 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
-import { useGithubStore } from "@/stores/github";
-import { useDocsStore } from "@/stores/docs";
+import { useGithubStore } from '@/stores/github'
+import { useDocsStore } from '@/stores/docs'
 
-export const useFocusStore = defineStore("focus", {
+export const useSourceStore = defineStore('source', {
   state: () => {
-    return {};
+    return {}
   },
   actions: {
-    async look({ owner, repo, path, ref }) {
+    async getSource(url) {
       const githubStore = useGithubStore(),
-        docsStore = useDocsStore();
+        docsStore = useDocsStore()
 
       if (!githubStore.accessToken) {
-        return {};
+        return {}
       }
 
       // make sure repo is in the store
       let { default_branch: defaultBranch } = await githubStore.fetchRepo({
         owner,
-        repo,
-      });
+        repo
+      })
 
       // if the ref isnt specified, fall back to repo default branch
-      ref = ref || `heads/${defaultBranch}`;
+      ref = ref || `heads/${defaultBranch}`
 
       // fetch content
       let content = await githubStore.fetchContent({
         owner,
         repo,
         ref,
-        path,
-      });
+        path
+      })
 
       // handle directory case
       if (Array.isArray(content)) {
         // try to use an index.md file
-        let indexContent = content.find(({ path }) =>
-          path.endsWith("index.md")
-        );
+        let indexContent = content.find(({ path }) => path.endsWith('index.md'))
 
         if (indexContent) {
           // fetch the index contents
@@ -46,8 +44,8 @@ export const useFocusStore = defineStore("focus", {
             owner,
             repo,
             ref,
-            path: indexContent.path,
-          });
+            path: indexContent.path
+          })
         }
       }
 
@@ -56,15 +54,15 @@ export const useFocusStore = defineStore("focus", {
         repo,
         ref,
         path,
-        contentBlob: content.content,
-      });
+        contentBlob: content.content
+      })
 
-      this.owner = owner;
-      this.repo = repo;
-      this.path = path;
-      this.ref = ref;
+      this.owner = owner
+      this.repo = repo
+      this.path = path
+      this.ref = ref
 
-      return { content };
-    },
-  },
-});
+      return { content }
+    }
+  }
+})
