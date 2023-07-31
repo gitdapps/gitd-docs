@@ -8,7 +8,7 @@ const router = createRouter({
       path: '/',
       name: 'doc',
       component: DocView,
-      props: (route) => ({ docUrl: new URL(route.hash.substring(1)) })
+      props: (route) => ({ docUrl: route.query.doc ? new URL(route.query.doc) : null })
     }
 
     // {

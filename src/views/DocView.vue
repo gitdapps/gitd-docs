@@ -17,7 +17,9 @@ const { docUrl } = defineProps({
 watchEffect(async () => {
   // this effect will run immediately and then
   // re-run whenever docUrl changes
-  content.value = await githubStore.fetch(docUrl)
+  if (docUrl) {
+    content.value = await githubStore.fetch(docUrl)
+  }
 })
 
 // doc = computed(() => {
