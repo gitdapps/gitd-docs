@@ -1,16 +1,23 @@
-import _ from 'lodash'
-import { marked } from 'marked'
+// import _ from 'lodash'
+import { Marked } from 'marked'
+import { baseUrl } from 'marked-base-url'
 import DOMPurify from 'dompurify'
 import { defineStore } from 'pinia'
-import { useDocsStore } from '@/stores/docs'
+import { useGithubStore } from '@/stores/github.js'
 
-class Doc {
+export class Doc {
   constructor({ url, markdown }) {
     this.url = url
     this.markdown = markdown
     this.headings = []
-    this.html = DOMPurify.sanitize(marked.parse(this.markdown), {
-      // baseUrl: this.baseUrl,
+    this.marked = new Marked(
+      {
+        mangle: false,
+        headerIds: false
+      },
+      baseUrl(url.toString())
+    )
+    this.html = DOMPurify.sanitize(this.marked.parse(this.markdown), {
       headerPrefix: 'heading-',
       walkTokens(token) {
         if (token.type === 'heading') {
@@ -41,7 +48,12 @@ export const useDocsStore = defineStore('docs', {
         ref = theRepo.default_branch
       }
 
-      let markdown = githubStore.fetchContent({ owner, repo, ref, path: '/' + path.join('/') }),
+      let markdown = await githubStore.fetchContent({
+          owner,
+          repo,
+          ref,
+          path: '/' + path.join('/')
+        }),
         doc = new Doc({ url, markdown })
 
       this[url] = doc

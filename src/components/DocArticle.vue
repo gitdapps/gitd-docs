@@ -1,15 +1,10 @@
-<template>
-  <article v-html="docHtml"></article>
-</template>
-
-<style scoped></style>
-
 <script setup>
 import { computed, nextTick, onUpdated, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { Doc } from '@/stores/docs'
 
 const route = useRoute(),
-  props = defineProps(['doc']),
+  props = defineProps({ doc: Doc }),
   docHtml = computed(() => {
     return props.doc ? props.doc.html : ''
   })
@@ -35,3 +30,9 @@ onUpdated(() => {
   scrollToHash(route.hash)
 })
 </script>
+
+<template>
+  <article v-html="docHtml"></article>
+</template>
+
+<style scoped></style>
