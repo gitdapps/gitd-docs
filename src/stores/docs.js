@@ -17,14 +17,16 @@ export class Doc {
       },
       baseUrl(url.toString())
     )
-    this.html = DOMPurify.sanitize(this.marked.parse(this.markdown), {
-      headerPrefix: 'heading-',
-      walkTokens(token) {
-        if (token.type === 'heading') {
-          headings.push(token)
+    this.html = DOMPurify.sanitize(
+      this.marked.parse(this.markdown, {
+        headerPrefix: 'heading-',
+        walkTokens: (token) => {
+          if (token.type === 'heading') {
+            this.headings.push(token)
+          }
         }
-      }
-    })
+      })
+    )
   }
 }
 

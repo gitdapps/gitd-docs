@@ -4,6 +4,8 @@ import { ref, watchEffect } from 'vue'
 
 // import DocMenu from '@/components/DocMenu.vue'
 import DocArticle from '@/components/DocArticle.vue'
+import DocOutlineAside from '@/components/DocOutlineAside.vue'
+import DocDiscussionAside from '@/components/DocDiscussionAside.vue'
 import { useDocsStore } from '@/stores/docs'
 
 const { docUrl } = defineProps({
@@ -38,13 +40,30 @@ watchEffect(async () => {
 <template>
   <main>
     <!-- <doc-menu /> -->
-    <doc-article v-bind:doc="doc" />
+    <doc-outline-aside :doc="doc" />
+    <doc-article :doc="doc" />
+    <doc-discussion-aside :doc="doc" />
   </main>
 </template>
 
 <style scoped>
 main {
-  height: 100vh;
-  overflow: scroll;
+  /* height: 100vh;
+  overflow: scroll; */
+  display: flex;
+  background-color: #f9f9f9;
+  justify-content: center;
+  padding-top: 3em;
+  gap: 1em;
+}
+
+main > article {
+  flex-shrink: 0;
+  width: 60em;
+}
+
+main > aside {
+  flex-shrink: 0;
+  width: 20em;
 }
 </style>
