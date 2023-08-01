@@ -40,9 +40,9 @@ watchEffect(async () => {
 <template>
   <main>
     <!-- <doc-menu /> -->
-    <doc-outline-aside :doc="doc" />
+    <doc-outline-aside id="outline" :doc="doc" />
     <doc-article :doc="doc" />
-    <doc-discussion-aside :doc="doc" />
+    <doc-discussion-aside id="discussion" :doc="doc" />
   </main>
 </template>
 
