@@ -40,7 +40,6 @@ article {
   box-shadow: 0 0 0.3em #eee;
   border: solid 1px #ddd;
   border-radius: 0.3em;
-  padding: 6em;
   background-color: white;
 }
 </style>

@@ -8,14 +8,14 @@ const props = defineProps({ doc: Doc }),
 
 <template>
   <aside :class="{ collapsed: collapsed }">
-    <font-awesome-icon icon="fa-solid fa-list" @click="collapsed = !collapsed" />
-    <template v-if="doc" v-for="heading in doc.headings">
-      <h1 v-if="heading.depth === 1">{{ heading.text }}</h1>
-      <h2 v-else-if="heading.depth === 2">{{ heading.text }}</h2>
-      <h3 v-else-if="heading.depth === 3">{{ heading.text }}</h3>
-      <h4 v-else-if="heading.depth === 4">{{ heading.text }}</h4>
-      <h5 v-else-if="heading.depth === 5">{{ heading.text }}</h5>
-      <h6 v-else>{{ heading.text }}</h6>
+    <font-awesome-icon icon="fa-regular fa-comment" @click="collapsed = !collapsed" />
+    <template v-if="doc" v-for="comment in doc.comments">
+      <h1 v-if="comment.depth === 1">{{ comment.text }}</h1>
+      <h2 v-else-if="comment.depth === 2">{{ comment.text }}</h2>
+      <h3 v-else-if="comment.depth === 3">{{ comment.text }}</h3>
+      <h4 v-else-if="comment.depth === 4">{{ comment.text }}</h4>
+      <h5 v-else-if="comment.depth === 5">{{ comment.text }}</h5>
+      <h6 v-else>{{ comment.text }}</h6>
     </template>
   </aside>
 </template>

@@ -5,11 +5,16 @@ import DOMPurify from 'dompurify'
 import { defineStore } from 'pinia'
 import { useGithubStore } from '@/stores/github.js'
 
+function clearToken(token) {
+  token.type = 'space'
+}
+
 export class Doc {
   constructor({ url, markdown }) {
     this.url = url
     this.markdown = markdown
     this.headings = []
+    this.comments = []
     this.marked = new Marked(
       {
         mangle: false,
@@ -17,12 +22,31 @@ export class Doc {
       },
       baseUrl(url.toString())
     )
+
+    let inComments = false,
+      commentDepth = 0
+
     this.html = DOMPurify.sanitize(
       this.marked.parse(this.markdown, {
         headerPrefix: 'heading-',
         walkTokens: (token) => {
-          if (token.type === 'heading') {
-            this.headings.push(token)
+          if (inComments) {
+            if (token.type === 'heading' && token.depth <= commentDepth) {
+              inComments = false
+              this.headings.push(token)
+            } else {
+              this.comments.push(structuredClone(token))
+              clearToken(token)
+            }
+          } else if (token.type === 'heading') {
+            if (token.text.toLowerCase() === 'comments') {
+              inComments = true
+              commentDepth = token.depth
+              this.comments.push(structuredClone(token))
+              clearToken(token)
+            } else {
+              this.headings.push(token)
+            }
           }
         }
       })
