@@ -2,11 +2,11 @@
 
 ## Section One
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit egestas dui id ornare arcu. Diam maecenas sed enim ut sem viverra. Mauris commodo quis imperdiet massa tincidunt nunc. Vel turpis nunc eget lorem dolor sed. Vulputate mi sit amet mauris commodo quis imperdiet. Ipsum dolor sit amet consectetur. Pharetra sit amet aliquam id diam maecenas ultricies. Ultrices in iaculis nunc sed augue lacus. Tempor id eu nisl nunc mi ipsum faucibus. Vitae congue mauris rhoncus aenean vel elit scelerisque mauris pellentesque. Velit dignissim sodales ut eu sem integer vitae justo eget. In iaculis nunc sed augue. Tortor id aliquet lectus proin nibh nisl. Velit laoreet id donec ultrices tincidunt. Fermentum et sollicitudin ac orci phasellus. Lacus luctus accumsan tortor posuere. Id diam maecenas ultricies mi eget mauris pharetra et ultrices. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec.
+Lorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit egestas dui id ornare arcu. Diam maecenas sed enim ut sem viverra. Mauris **commodo** quis imperdiet massa tincidunt nunc. Vel turpis nunc eget lorem dolor sed. Vulputate mi sit amet mauris commodo quis imperdiet. Ipsum dolor sit amet consectetur. Pharetra sit amet aliquam id diam maecenas ultricies. Ultrices in iaculis nunc sed augue lacus. Tempor id eu nisl nunc mi ipsum faucibus. Vitae congue mauris rhoncus aenean vel elit ***scelerisque*** mauris pellentesque. Velit dignissim sodales ut eu sem integer vitae justo eget. In iaculis nunc sed augue. Tortor id aliquet lectus proin nibh nisl. Velit laoreet id donec ultrices tincidunt. Fermentum et sollicitudin ac orci phasellus. Lacus luctus accumsan tortor posuere. Id diam maecenas ultricies mi eget mauris pharetra et ultrices. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec.
 
 ### Subsection One Point One
 
-Hac habitasse platea dictumst quisque. Tellus at urna condimentum mattis pellentesque. Sit amet volutpat consequat mauris nunc congue nisi vitae suscipit. Lectus mauris ultrices eros in cursus turpis. Duis convallis convallis tellus id interdum. Amet commodo nulla facilisi nullam. Vulputate mi sit amet mauris commodo quis imperdiet massa tincidunt. Massa tempor nec feugiat nisl pretium fusce id. Mattis vulputate enim nulla aliquet. Viverra adipiscing at in tellus integer feugiat scelerisque varius morbi. Et malesuada fames ac turpis egestas integer eget aliquet nibh. Amet justo donec enim diam vulputate ut. In iaculis nunc sed augue lacus viverra vitae congue. Sed viverra ipsum nunc aliquet.
+Hac _habitasse_ platea dictumst quisque. Tellus at urna condimentum mattis pellentesque. Sit amet volutpat consequat mauris nunc congue nisi vitae suscipit. Lectus mauris ultrices eros in cursus turpis. Duis __convallis__ convallis tellus id interdum. Amet commodo nulla facilisi nullam. Vulputate mi sit amet mauris commodo quis imperdiet massa tincidunt. Massa tempor nec ___feugiat___ nisl pretium fusce id. Mattis vulputate enim nulla aliquet. Viverra adipiscing at in tellus integer feugiat scelerisque varius morbi. Et malesuada fames ac turpis egestas integer eget aliquet nibh. Amet justo donec enim diam vulputate ut. In iaculis nunc sed augue lacus viverra vitae congue. Sed viverra ipsum nunc aliquet.
 
 ### Subsection One Point Two
 
@@ -28,11 +28,11 @@ Faucibus interdum posuere lorem ipsum dolor. Dolor sit amet consectetur adipisci
 
 ### Topic One
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Feugiat in fermentum posuere urna nec tincidunt praesent semper feugiat. 
+Lorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do **eiusmod** tempor incididunt ut labore et dolore magna aliqua. ***Feugiat*** in fermentum posuere urna nec tincidunt praesent semper feugiat. 
 
 ### Topic Two
 
-Consectetur purus ut faucibus pulvinar elementum integer. Risus nec feugiat in fermentum posuere urna nec tincidunt. 
+Consectetur _purus_ ut faucibus pulvinar __elementum__ integer. Risus nec feugiat in ___fermentum___ posuere urna nec tincidunt. 
 
 ### Topic Three
 
