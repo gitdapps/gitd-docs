@@ -52,31 +52,29 @@ main {
   align-items: flex-start;
   background-color: #f9f9f9;
   justify-content: center;
-  padding: 3em;
   gap: 1em;
 }
 
-main > article {
+article {
   flex-shrink: 0;
   max-width: 40em;
   padding: 4em;
+  z-index: 1;
+  margin: 3em 0 100vh 0;
 }
 
-main > aside {
+aside {
   flex-shrink: 0;
-  background-color: grey;
   width: 20em;
-}
-
-main > aside.collapsed {
-  flex-shrink: 0;
-  background-color: grey;
-  width: 2em;
 }
 
 #outline {
   position: sticky;
   top: 3em;
+}
+
+#outline.collapsed {
+  left: 24em;
 }
 
 @media (max-width: 1380px) {
@@ -90,7 +88,7 @@ main > aside.collapsed {
 
 @media (max-width: 1060px) {
   #outline {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
@@ -98,14 +96,14 @@ main > aside.collapsed {
 }
 
 @media (max-width: 780px) {
-  main > article {
+  article {
     width: 80vw;
     padding: 8vw;
   }
 }
 
 @media (max-width: 320px) {
-  main > article {
+  article {
     width: 260px;
     padding: 26px;
   }

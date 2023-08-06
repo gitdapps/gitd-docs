@@ -21,11 +21,6 @@ const props = defineProps({ doc: Doc }),
 </template>
 
 <style scoped>
-aside {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 .collapsed :is(h1, h2, h3, h4, h5, h6) {
   padding-inline-start: 0;
 }
