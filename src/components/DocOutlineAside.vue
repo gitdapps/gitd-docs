@@ -1,14 +1,11 @@
 <script setup>
-import { ref } from 'vue'
 import { Doc } from '@/stores/docs'
 
-const props = defineProps({ doc: Doc }),
-  collapsed = ref(false)
+const props = defineProps({ doc: Doc })
 </script>
 
 <template>
-  <aside :class="{ collapsed: collapsed }">
-    <font-awesome-icon icon="fa-solid fa-list" @click="collapsed = !collapsed" />
+  <aside>
     <template v-if="doc" v-for="heading in doc.headings">
       <a :href="`#${heading.level === 1 ? '' : heading.id}`">
         <h1 v-if="heading.level === 1" v-html="heading.text"></h1>
@@ -23,11 +20,6 @@ const props = defineProps({ doc: Doc }),
 </template>
 
 <style scoped>
-.collapsed :is(h1, h2, h3, h4, h5, h6) {
-  padding-inline-start: 0;
-  display: none;
-}
-
 a {
   text-decoration: none;
   color: inherit;

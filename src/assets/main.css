@@ -12,6 +12,11 @@ body {
   /* font-weight: normal; */
   /* overflow: hidden; */
 }
+
+.action {
+  cursor: pointer;
+}
+
 /*
 a,
 .green {

@@ -1,4 +1,39 @@
+<script setup>
+import { Doc } from '@/stores/docs'
+
+const props = defineProps({ doc: Doc })
+</script>
+
 <template>
+  <menu>
+    <li>
+      <font-awesome-icon
+        class="action"
+        icon="fa-solid fa-list"
+        size="xl"
+        @click="$emit('toggleOutline')"
+      />
+    </li>
+    <li>
+      <font-awesome-icon
+        class="action"
+        icon="fa-regular fa-comment"
+        size="xl"
+        @click="$emit('toggleComment')"
+      />
+    </li>
+  </menu>
+</template>
+
+<style scoped>
+menu {
+  list-style-type: none;
+}
+</style>
+
+<!-- OLD MENU CODE BELOW -->
+
+<!-- <template>
   <menu class="gitd-menu">
     <router-link id="avatar-link" v-bind:to="avatarHref"
       ><img id="avatar" v-bind:src="avatarSrc"
@@ -246,4 +281,4 @@ function entryClass(entry) {
     active: this.$route.params.path === entry.path
   }
 }
-</script>
+</script> -->
