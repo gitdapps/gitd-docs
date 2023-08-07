@@ -19,7 +19,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "dompurify": "^3.0.5",
     "github-slugger": "^2.0.0",
-    "marked": "^6.0.0",
+    "marked": "^7.0.0",
     "marked-base-url": "^1.0.3",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",
