@@ -29,6 +29,10 @@ const props = defineProps({ doc: Doc })
 menu {
   list-style-type: none;
 }
+
+.action {
+  margin: 0.5em;
+}
 </style>
 
 <!-- OLD MENU CODE BELOW -->

@@ -10,14 +10,14 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faList } from '@fortawesome/free-solid-svg-icons'
+import { faList, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-regular-svg-icons'
 
 import App from './App.vue'
 import router from './router'
 
 /* add icons to the library */
-library.add(faList, faComment)
+library.add(faList, faXmark, faComment)
 
 const app = createApp(App)
 

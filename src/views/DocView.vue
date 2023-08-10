@@ -8,13 +8,22 @@ import DocOutlineAside from '@/components/DocOutlineAside.vue'
 import DocCommentAside from '@/components/DocCommentAside.vue'
 import { useDocsStore } from '@/stores/docs'
 
+const asideOverlayQuery = window.matchMedia('(max-width: 1060px)'),
+  doubleAsideQuery = window.matchMedia('(min-width: 1380px)')
+
+doubleAsideQuery.addEventListener('change', (e) => {
+  if (!e.matches && outlineActive.value && commentActive.value) {
+    commentActive.value = false
+  }
+})
+
 const { docUrl } = defineProps({
     docUrl: URL
   }),
   docsStore = useDocsStore(),
   doc = ref(null),
-  outlineCollapsed = ref(false),
-  commentCollapsed = ref(false)
+  outlineActive = ref(false),
+  commentActive = ref(false)
 
 watchEffect(async () => {
   // this effect will run immediately and then
@@ -23,6 +32,41 @@ watchEffect(async () => {
     doc.value = await docsStore.fetch(docUrl)
   }
 })
+
+function toggleOutline(newValue = !outlineActive.value) {
+  outlineActive.value = newValue
+
+  if (outlineActive.value && commentActive.value && !doubleAsideQuery.matches) {
+    commentActive.value = false
+  }
+
+  // if (!outlineActive.value) {
+  //   commentActive.value = false
+  // }
+}
+
+function toggleComment(newValue = !commentActive.value) {
+  commentActive.value = newValue
+
+  if (outlineActive.value && commentActive.value && !doubleAsideQuery.matches) {
+    outlineActive.value = false
+  }
+
+  // if (!commentActive.value) {
+  //   outlineActive.value = false
+  // }
+}
+
+function coverClick() {
+  outlineActive.value = false
+  commentActive.value = false
+}
+
+function outlineClick() {
+  if (asideOverlayQuery.matches) {
+    toggleOutline(false)
+  }
+}
 
 // document.addEventListener('click', (e) => {
 //   if (_.includes(document.querySelectorAll('.page a'), e.target)) {
@@ -41,20 +85,31 @@ watchEffect(async () => {
 
 <template>
   <main>
-    <div id="toolbar"></div>
-    <doc-outline-aside id="outline" :doc="doc" :class="{ collapsed: outlineCollapsed }" />
-
-    <div id="article-container">
-      <doc-menu
-        id="menu"
-        :doc="doc"
-        @toggle-outline="outlineCollapsed = !outlineCollapsed"
-        @toggle-comment="commentCollapsed = !commentCollapsed"
-      />
-      <doc-article id="article" :doc="doc" />
+    <doc-menu
+      id="menu"
+      :doc="doc"
+      @toggle-outline="toggleOutline()"
+      @toggle-comment="toggleComment()"
+      :class="{ asideActive: outlineActive || commentActive }"
+    />
+    <doc-outline-aside
+      id="outline"
+      :doc="doc"
+      :class="{ active: outlineActive }"
+      @click="outlineClick()"
+    />
+    <div
+      id="cover"
+      :style="{ visibility: outlineActive || commentActive ? '' : 'hidden' }"
+      :class="{ leftClose: commentActive, rightClose: outlineActive }"
+      @click="coverClick()"
+    >
+      <font-awesome-icon icon="fa-solid fa-xmark" size="xl" style="margin: 1em 1em 0 0.5em" />
     </div>
 
-    <doc-comment-aside id="comment" :doc="doc" :class="{ collapsed: commentCollapsed }" />
+    <doc-article id="article" :doc="doc" />
+
+    <doc-comment-aside id="comment" :doc="doc" :class="{ active: commentActive }" />
   </main>
 </template>
 
@@ -67,25 +122,34 @@ main {
   gap: 1em;
 }
 
-#toolbar {
+#cover {
   position: fixed;
+  top: 0;
   left: 0;
-  width: 100%;
-  height: 4em;
+  width: 100vw;
+  height: 100vh;
   backdrop-filter: blur(4px);
   background-color: rgba(255, 255, 255, 0.8);
-  z-index: 3;
+  z-index: 2;
+  display: flex;
+}
+#cover.rightClose {
+  justify-content: flex-end;
 }
 
 #menu {
-  position: sticky;
-  width: 100%;
-  /* background-color: turquoise; */
   z-index: 4;
   display: flex;
   justify-content: space-between;
-  padding: 1em 0;
+  position: fixed;
+
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.8);
   margin: 0;
+  padding: 0;
 }
 
 #article {
@@ -103,6 +167,7 @@ main {
 aside {
   flex-shrink: 0;
   width: 20em;
+  display: none;
 }
 
 #outline {
@@ -114,67 +179,61 @@ aside {
   margin-top: 3em;
 }
 
-aside.collapsed {
-  display: none;
+aside.active {
+  display: unset;
 }
 
-@media (max-width: 1380px) {
-  #comment {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
-    margin: 0;
-    background-color: whitesmoke;
-    padding-top: 4em;
-  }
-}
-
-@media (max-width: 1060px) {
-  #outline {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 2;
-    background-color: whitesmoke;
-    padding-top: 4em;
-  }
-
-  #outline.collapsed {
-    display: none;
-  }
-}
-
-@media (min-width: 800px) {
+@media (min-width: 1060px) {
   article {
     width: 40em;
     padding: 4em;
   }
 
-  #toolbar {
-    top: 0;
-  }
-
-  #menu {
-    top: 0;
+  #cover {
+    display: none;
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1060px) {
   article {
     width: 80vw;
     padding: 4vw;
   }
 
-  #toolbar {
-    bottom: 0;
+  aside {
+    border: solid 1px #eee;
+    box-shadow: 0 0 0.3em #eee;
+    background-color: white;
+  }
+
+  #outline {
+    border-radius: 0 2em 2em 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 10;
+  }
+
+  #comment {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    margin: 0;
+    padding-top: 4em;
+  }
+
+  #comment {
+    border-radius: 2em 0 0 2em;
   }
 
   #menu {
-    position: fixed;
     bottom: 0;
-    width: 88vw;
+  }
+
+  #menu.asideActive {
+    display: none;
   }
 }
 
@@ -184,8 +243,8 @@ aside.collapsed {
     padding: 13px;
   }
 
-  #menu {
-    width: 286px;
+  aside {
+    width: 18em;
   }
 }
 </style>
