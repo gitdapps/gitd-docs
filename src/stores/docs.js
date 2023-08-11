@@ -2,6 +2,9 @@
 import { Marked } from 'marked'
 import { baseUrl } from 'marked-base-url'
 import { markedEmoji } from 'marked-emoji'
+import { markedHighlight } from 'marked-highlight'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css'
 
 import DOMPurify from 'dompurify'
 import { defineStore } from 'pinia'
@@ -96,7 +99,14 @@ export class Doc {
       baseUrl(url.toString()),
       headings({ headings: this.headings }),
       comments({ comments: this.comments }),
-      markedEmoji({ emojis, unicode: false })
+      markedEmoji({ emojis, unicode: false }),
+      markedHighlight({
+        langPrefix: 'hljs language-',
+        highlight(code, lang) {
+          const language = hljs.getLanguage(lang) ? lang : 'plaintext'
+          return hljs.highlight(code, { language }).value
+        }
+      })
     )
 
     // this.html = this.marked.parse(this.markdown)
