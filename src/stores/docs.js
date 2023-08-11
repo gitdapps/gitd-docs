@@ -1,6 +1,8 @@
 // import _ from 'lodash'
 import { Marked } from 'marked'
 import { baseUrl } from 'marked-base-url'
+import { markedEmoji } from 'marked-emoji'
+
 import DOMPurify from 'dompurify'
 import { defineStore } from 'pinia'
 
@@ -81,7 +83,7 @@ function comments({ comments = [] } = {}) {
 }
 
 export class Doc {
-  constructor({ url, markdown }) {
+  constructor({ url, markdown, emojis }) {
     this.url = url
     this.markdown = markdown
     this.headings = []
@@ -93,7 +95,8 @@ export class Doc {
       },
       baseUrl(url.toString()),
       headings({ headings: this.headings }),
-      comments({ comments: this.comments })
+      comments({ comments: this.comments }),
+      markedEmoji({ emojis, unicode: false })
     )
 
     // this.html = this.marked.parse(this.markdown)
@@ -116,7 +119,8 @@ export const useDocsStore = defineStore('docs', {
 
       let [owner, repo, treeOrBlob, ref, ...path] = url.pathname.substring(1).split('/')
 
-      let theRepo = await githubStore.fetchRepo({ owner, repo })
+      let theRepo = await githubStore.fetchRepo({ owner, repo }),
+        emojis = await githubStore.fetchEmojis()
 
       if (!ref) {
         ref = theRepo.default_branch
@@ -128,7 +132,7 @@ export const useDocsStore = defineStore('docs', {
           ref,
           path: '/' + path.join('/')
         }),
-        doc = new Doc({ url, markdown })
+        doc = new Doc({ url, markdown, emojis })
 
       this[url] = doc
 

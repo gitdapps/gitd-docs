@@ -89,6 +89,20 @@ export const useGithubStore = defineStore('github', {
 
       return ret
     },
+    async fetchEmojis() {
+      // Get all the emojis available to use on GitHub.
+      const res = await octokit.emojis.get()
+      /*
+       * {
+       *   ...
+       *   "heart": "https://...",
+       *   ...
+       *   "tada": "https://...",
+       *   ...
+       * }
+       */
+      return res.data
+    },
     async fetch(url) {
       let [owner, repo, treeOrBlob, ref, ...path] = url.pathname.substring(1).split('/')
 

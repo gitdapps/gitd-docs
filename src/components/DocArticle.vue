@@ -35,4 +35,36 @@ onUpdated(() => {
   <article v-html="docHtml"></article>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(blockquote) {
+  border-left: solid 0.5em #aaa;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0.5em;
+  padding: 0.5em;
+}
+
+:deep(blockquote p) {
+  margin: 0;
+}
+
+:deep(img) {
+  max-width: 100%;
+}
+
+:deep(a) {
+  color: #0078d4;
+}
+
+:deep(code) {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0.2em;
+  padding: 0.2em;
+}
+
+:deep(pre code) {
+  border: solid 1px #ccc;
+  display: block;
+  border-radius: 0.5em;
+  padding: 0.5em;
+}
+</style>
