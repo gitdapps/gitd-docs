@@ -2,13 +2,15 @@
 
 ## Level One - RED
 
-!!! bug This is a bug call-out! !!!
+!!! bug This is a bug call-out.
 
-!!! danger This is a danger call-out!
+!!! danger This is a danger call-out. !!!
 
-!!! error This is an error call-out!
+!!! error This is an error call-out.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor massa, nec semper lorem quam in massa.
+!!! 
 
-!!! failure This is a failure call-out!
+!!! failure This is a failure call-out.
 
 ## Level Two - AMBER
 
