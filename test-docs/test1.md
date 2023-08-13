@@ -4,7 +4,11 @@
 
 Lorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit egestas dui id ornare arcu. Diam maecenas sed enim ut sem viverra. Mauris **commodo** quis imperdiet massa tincidunt nunc. Vel turpis nunc eget lorem dolor sed. Vulputate mi sit amet mauris commodo quis imperdiet. Ipsum dolor sit amet consectetur. Pharetra sit amet aliquam id diam maecenas ultricies. Ultrices in iaculis nunc sed augue lacus. Tempor id eu nisl nunc mi ipsum faucibus. Vitae congue mauris rhoncus aenean vel elit ***scelerisque*** mauris pellentesque. Velit dignissim sodales ut eu sem integer vitae justo eget. In iaculis nunc sed augue. Tortor id aliquet lectus proin nibh nisl. Velit laoreet id donec ultrices tincidunt. Fermentum et sollicitudin ac orci phasellus. Lacus luctus accumsan tortor posuere. Id diam maecenas ultricies mi eget mauris pharetra et ultrices. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec.
 
-> :warning: **Warning:** Do not push the big red button.
+> :warning: **Warning:** Do not push the big red button. This is a blockquote trying to look like an admonition.
+
+!!! bug this is a `bug` type admonition
+The warning above was a `bug` type admonition. This is an actual admonition.
+!!!
 
 > :memo: **Note:** Sunrises are beautiful.
 
