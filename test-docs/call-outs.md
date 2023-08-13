@@ -2,7 +2,7 @@
 
 ## Level One - RED
 
-!!! bug This is a bug call-out!
+!!! bug This is a bug call-out! !!!
 
 !!! danger This is a danger call-out!
 
