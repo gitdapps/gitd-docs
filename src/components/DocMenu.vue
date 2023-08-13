@@ -14,6 +14,22 @@ const props = defineProps({ doc: Doc })
         @click="$emit('toggleOutline')"
       />
     </li>
+    <li id="toggle-fill-item">
+      <font-awesome-icon
+        id="fill-action"
+        class="action"
+        icon="fa-solid fa-arrows-left-right-to-line"
+        size="xl"
+        @click="$emit('toggleFill')"
+      />
+      <font-awesome-icon
+        id="drain-action"
+        class="action"
+        icon="fa-regular fa-file-lines"
+        size="xl"
+        @click="$emit('toggleFill')"
+      />
+    </li>
     <li>
       <font-awesome-icon
         class="action"
@@ -32,6 +48,26 @@ menu {
 
 .action {
   margin: 0.5em;
+}
+
+.filled #fill-action {
+  display: none;
+}
+
+#drain-action {
+  display: none;
+}
+
+.filled #drain-action {
+  display: block;
+}
+
+#toggle-fill-item {
+  display: none;
+}
+
+.fillable #toggle-fill-item {
+  display: block;
 }
 </style>
 

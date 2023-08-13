@@ -1,5 +1,4 @@
 <script setup>
-// import _ from 'lodash'
 import { ref, watchEffect } from 'vue'
 
 import DocArticle from '@/components/DocArticle.vue'
@@ -8,14 +7,8 @@ import DocOutlineAside from '@/components/DocOutlineAside.vue'
 import DocCommentAside from '@/components/DocCommentAside.vue'
 import { useDocsStore } from '@/stores/docs'
 
-const asideOverlayQuery = window.matchMedia('(max-width: 1060px)'),
-  doubleAsideQuery = window.matchMedia('(min-width: 1380px)')
-
-doubleAsideQuery.addEventListener('change', (e) => {
-  if (!e.matches && outlineActive.value && commentActive.value) {
-    commentActive.value = false
-  }
-})
+const asideOverlayQuery = window.matchMedia('(max-width: 72rem)'),
+  doubleAsideQuery = window.matchMedia('(min-width: 1460px)')
 
 const { docUrl } = defineProps({
     docUrl: URL
@@ -23,7 +16,21 @@ const { docUrl } = defineProps({
   docsStore = useDocsStore(),
   doc = ref(null),
   outlineActive = ref(false),
-  commentActive = ref(false)
+  commentActive = ref(false),
+  filled = ref(asideOverlayQuery.matches),
+  fillable = ref(!asideOverlayQuery.matches)
+
+doubleAsideQuery.addEventListener('change', (e) => {
+  if (!e.matches && outlineActive.value && commentActive.value) {
+    commentActive.value = false
+  }
+})
+
+asideOverlayQuery.addEventListener('change', (e) => {
+  fillable.value = !e.matches
+
+  toggleFill(e.matches)
+})
 
 watchEffect(async () => {
   // this effect will run immediately and then
@@ -39,10 +46,6 @@ function toggleOutline(newValue = !outlineActive.value) {
   if (outlineActive.value && commentActive.value && !doubleAsideQuery.matches) {
     commentActive.value = false
   }
-
-  // if (!outlineActive.value) {
-  //   commentActive.value = false
-  // }
 }
 
 function toggleComment(newValue = !commentActive.value) {
@@ -51,10 +54,10 @@ function toggleComment(newValue = !commentActive.value) {
   if (outlineActive.value && commentActive.value && !doubleAsideQuery.matches) {
     outlineActive.value = false
   }
+}
 
-  // if (!commentActive.value) {
-  //   outlineActive.value = false
-  // }
+function toggleFill(newValue = !filled.value) {
+  filled.value = newValue
 }
 
 function coverClick() {
@@ -84,17 +87,26 @@ function outlineClick() {
 </script>
 
 <template>
-  <main>
+  <main
+    id="doc-view"
+    :class="{
+      filled: filled,
+      outline: outlineActive,
+      comment: commentActive,
+      fillable: fillable
+    }"
+  >
     <doc-menu
       id="menu"
       :doc="doc"
       @toggle-outline="toggleOutline()"
       @toggle-comment="toggleComment()"
-      :class="{ asideActive: outlineActive || commentActive }"
+      @toggle-fill="toggleFill()"
     />
     <doc-outline-aside
       id="outline"
       :doc="doc"
+      class="doc-aside"
       :class="{ active: outlineActive }"
       @click="outlineClick()"
     />
@@ -109,17 +121,27 @@ function outlineClick() {
 
     <doc-article id="article" :doc="doc" />
 
-    <doc-comment-aside id="comment" :doc="doc" :class="{ active: commentActive }" />
+    <doc-comment-aside
+      id="comment"
+      :doc="doc"
+      class="doc-aside"
+      :class="{ active: commentActive }"
+    />
   </main>
 </template>
 
 <style scoped>
-main {
+#doc-view {
   display: flex;
   align-items: flex-start;
   background-color: #f9f9f9;
   justify-content: center;
-  gap: 1em;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+#doc-view.filled {
+  background-color: white;
 }
 
 #cover {
@@ -131,7 +153,7 @@ main {
   backdrop-filter: blur(4px);
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 2;
-  display: flex;
+  display: none;
 }
 #cover.rightClose {
   justify-content: flex-end;
@@ -153,61 +175,78 @@ main {
 }
 
 #article {
-  box-shadow: 0 0 0.3em #eee;
-  border: solid 1px #ddd;
-  border-radius: 0 0 0.3em 0.3em;
+  box-shadow: 0 0 0.4rem #eee;
+  border: solid 1px #ccc;
+  border-radius: 0 0 0.4rem 0.4rem;
   background-color: white;
-
   flex-shrink: 0;
   flex-grow: 0;
-
-  margin: 1em 0 100vh 0;
+  margin: 1rem 0 100vh 0;
 }
 
-aside {
+.filled #article {
+  box-shadow: none;
+  border: none;
+}
+
+.doc-aside {
   flex-shrink: 0;
-  width: 20em;
+  width: 20rem;
   display: none;
 }
 
 #outline {
   position: sticky;
-  top: 3em;
+  top: 3rem;
 }
 
 #comment {
-  margin-top: 3em;
+  margin-top: 3rem;
 }
 
 aside.active {
   display: unset;
 }
 
-@media (min-width: 1060px) {
+@media (min-width: 72rem) {
   article {
     width: 40em;
     padding: 4em;
   }
 
-  #cover {
-    display: none;
+  .filled > article {
+    font-size: calc(100vw / 50);
+  }
+
+  .filled.outline > article,
+  .filled.comment > article {
+    font-size: calc(100vw / 70);
+  }
+
+  .filled.comment.outline > article {
+    font-size: calc(100vw / 95);
   }
 }
 
-@media (max-width: 1060px) {
+@media (max-width: 72rem) {
   article {
+    max-width: 40rem;
     width: 80vw;
     padding: 4vw;
   }
 
   aside {
     border: solid 1px #eee;
-    box-shadow: 0 0 0.3em #eee;
+    box-shadow: 0 0 0.3rem #eee;
     background-color: white;
   }
 
+  #cover {
+    display: flex;
+  }
+
   #outline {
-    border-radius: 0 2em 2em 0;
+    border-radius: 0 2rem 2rem 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -221,30 +260,33 @@ aside.active {
     right: 0;
     z-index: 3;
     margin: 0;
-    padding-top: 4em;
+    padding-top: 4rem;
   }
 
   #comment {
-    border-radius: 2em 0 0 2em;
+    border-radius: 2rem 0 0 2rem;
   }
 
   #menu {
     bottom: 0;
   }
 
-  #menu.asideActive {
+  .outline > #menu,
+  .comment > #menu {
     display: none;
   }
 }
 
-@media (max-width: 320px) {
-  article {
-    width: 260px;
-    padding: 13px;
-  }
-
+@media (max-width: 24rem) {
   aside {
-    width: 18em;
+    width: 80vw;
+  }
+}
+
+@media (max-width: 20rem) {
+  article {
+    width: 16rem;
+    padding: 1rem;
   }
 }
 </style>
