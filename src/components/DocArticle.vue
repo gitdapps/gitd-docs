@@ -67,4 +67,8 @@ onUpdated(() => {
   border-radius: 0.5em;
   padding: 0.5em;
 }
+
+:deep(img.emoji) {
+  height: 1em;
+}
 </style>

@@ -1,7 +1,5 @@
-// import _ from 'lodash'
 import { Marked } from 'marked'
 import { baseUrl } from 'marked-base-url'
-import { markedEmoji } from 'marked-emoji'
 import { markedHighlight } from 'marked-highlight'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
@@ -10,80 +8,10 @@ import DOMPurify from 'dompurify'
 import { defineStore } from 'pinia'
 
 import { useGithubStore } from '@/stores/github.js'
-
-import GithubSlugger from 'github-slugger'
-
-function headings({ idPrefix = '', headings = [] } = {}) {
-  let slugger,
-    span = document.createElement('span'),
-    generateText = (html) => {
-      span.innerHTML = html
-      return span.textContent || span.innerText || ''
-    },
-    generateId = (text) =>
-      `${idPrefix}${slugger.slug(
-        text
-          .toLowerCase()
-          .trim()
-          .replace(/<[!\/a-z].*?>/gi, '')
-      )}`
-
-  return {
-    hooks: {
-      preprocess(src) {
-        slugger = new GithubSlugger()
-
-        return src
-      }
-    },
-    renderer: {
-      heading(html, level) {
-        let heading = {
-          text: generateText(DOMPurify.sanitize(html)),
-          level
-        }
-
-        heading.id = generateId(heading.text)
-
-        headings.push(heading)
-
-        return `<h${heading.level} id="${heading.id}">${html}</h${heading.level}>\n`
-      }
-    }
-  }
-}
-
-function comments({ comments = [] } = {}) {
-  let inComments = false,
-    commentDepth = 0
-
-  return {
-    hooks: {
-      preprocess(src) {
-        inComments = false
-        return src
-      }
-    },
-    walkTokens: (token) => {
-      // enter and exit comments section
-      if (token.type === 'heading') {
-        if (token.text.toLowerCase() === 'comments') {
-          inComments = true
-          commentDepth = token.depth
-        } else if (token.depth <= commentDepth) {
-          inComments = false
-        }
-      }
-
-      token.comment = inComments
-
-      if (inComments) {
-        comments.push(structuredClone(token))
-        token.type = 'space'
-      }
-    }
-  }
-}
+import { emoijs } from '@/markdown/emojis.js'
+import { headings } from '@/markdown/headings.js'
+import { comments } from '@/markdown/comments.js'
+import { admonitions } from '@/markdown/admonitions.js'
 
 export class Doc {
   constructor({ url, markdown, emojis }) {
@@ -94,12 +22,18 @@ export class Doc {
     this.marked = new Marked(
       {
         mangle: false,
-        headerIds: false
+        headerIds: false,
+        renderer: {
+          emoji(emoji) {
+            console.log('emoji', emoji)
+          }
+        }
       },
       baseUrl(url.toString()),
       headings({ headings: this.headings }),
       comments({ comments: this.comments }),
-      markedEmoji({ emojis, unicode: false }),
+      emoijs({ emojis }),
+      admonitions(),
       markedHighlight({
         langPrefix: 'hljs language-',
         highlight(code, lang) {
@@ -109,7 +43,6 @@ export class Doc {
       })
     )
 
-    // this.html = this.marked.parse(this.markdown)
     this.html = DOMPurify.sanitize(this.marked.parse(this.markdown))
     console.log(DOMPurify.removed)
   }
