@@ -11,7 +11,7 @@ import { useGithubStore } from '@/stores/github.js'
 import { emoijs } from '@/markdown/emojis.js'
 import { headings } from '@/markdown/headings.js'
 import { comments } from '@/markdown/comments.js'
-import { admonitions } from '@/markdown/admonitions.js'
+import { exclamation } from '@/markdown/exclamation.js'
 
 export class Doc {
   constructor({ url, markdown, emojis }) {
@@ -33,7 +33,7 @@ export class Doc {
       headings({ headings: this.headings }),
       comments({ comments: this.comments }),
       emoijs({ emojis }),
-      admonitions(),
+      exclamation(),
       markedHighlight({
         langPrefix: 'hljs language-',
         highlight(code, lang) {
@@ -44,7 +44,6 @@ export class Doc {
     )
 
     this.html = DOMPurify.sanitize(this.marked.parse(this.markdown))
-    console.log(DOMPurify.removed)
   }
 }
 
