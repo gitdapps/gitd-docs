@@ -7,8 +7,17 @@ Lorem ipsum dolor sit amet, *consectetur* adipiscing elit, sed do eiusmod tempor
 > :warning: **Warning:** Do not push the big red button. This is a blockquote trying to look like an admonition.
 
 !!! bug this is a `bug` type admonition
-The warning above was a `bug` type admonition. This is an actual admonition.
+The warning above was a `bug` type admonition. 
 !!!
+
+!!! danger this is a `danger` type admonition The warning above was a `danger` type admonition !!!
+
+!!! note
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
+    nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
+    massa, nec semper lorem quam in massa.
+
 
 > :memo: **Note:** Sunrises are beautiful.
 
