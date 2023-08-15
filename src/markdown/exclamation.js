@@ -1,4 +1,4 @@
-const types = [
+const variants = [
     // level 1 (red)
     'bug',
     'danger',
@@ -23,6 +23,7 @@ const types = [
     'question'
   ],
   defaultOptions = { className: 'exclamation' },
+  // variantRule =   new RegExp(`^!!!\\s+(${variants.join('|')})(?:\\s+)?(.*)$`),
   rule = /^( {0,3}! ?(paragraph|[^\n]*)(?:\n|$))+/
 
 /**
@@ -67,6 +68,7 @@ export function exclamation(options = {}) {
           if (cap) {
             const text = cap[0].replace(/^ *![ \t]?/gm, ''),
               top = this.lexer.state.top
+
             this.lexer.state.top = true
 
             const tokens = this.lexer.blockTokens(text)

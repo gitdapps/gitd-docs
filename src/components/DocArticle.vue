@@ -71,4 +71,11 @@ onUpdated(() => {
 :deep(img.emoji) {
   height: 1em;
 }
+
+:deep(div.exclamation) {
+  background-color: rgba(255, 0, 0, 0.05);
+  border-radius: 0.2em;
+  padding: 0.2em;
+  border: solid 1px rgba(255, 0, 0, 0.5);
+}
 </style>
