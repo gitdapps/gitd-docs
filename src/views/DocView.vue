@@ -137,7 +137,6 @@ function outlineClick() {
   background-color: #f9f9f9;
   justify-content: center;
   gap: 1rem;
-  overflow: hidden;
 }
 
 #doc-view.filled {
@@ -182,6 +181,7 @@ function outlineClick() {
   flex-shrink: 0;
   flex-grow: 0;
   margin: 1rem 0 100vh 0;
+  overflow: hidden;
 }
 
 .filled #article {
