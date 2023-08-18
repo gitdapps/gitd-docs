@@ -33,7 +33,7 @@ export class Doc {
       headings({ headings: this.headings }),
       comments({ comments: this.comments }),
       emoijs({ emojis }),
-      exclamation(),
+      // exclamation(),
       markedHighlight({
         langPrefix: 'hljs language-',
         highlight(code, lang) {
@@ -53,32 +53,40 @@ export const useDocsStore = defineStore('docs', {
   },
   actions: {
     async fetch(url) {
+      const githubStore = useGithubStore()
+
       if (this[url]) {
         return this[url]
+      } else if (url.origin.toLowerCase() === 'https://github.com') {
+        let [owner, repo, treeOrBlob, ref, ...path] = url.pathname.substring(1).split('/')
+
+        let theRepo = await githubStore.fetchRepo({ owner, repo }),
+          emojis = await githubStore.fetchEmojis()
+
+        if (!ref) {
+          ref = theRepo.default_branch
+        }
+
+        let markdown = await githubStore.fetchContent({
+            owner,
+            repo,
+            ref,
+            path: '/' + path.join('/')
+          }),
+          doc = new Doc({ url, markdown, emojis })
+
+        this[url] = doc
+
+        return doc
+      } else {
+        let markdown = await fetch(url).then((response) => response.text()),
+          emojis = await githubStore.fetchEmojis(),
+          doc = new Doc({ url, markdown, emojis })
+
+        this[url] = doc
+
+        return doc
       }
-
-      const githubStore = useGithubStore() // only suppoting github for now
-
-      let [owner, repo, treeOrBlob, ref, ...path] = url.pathname.substring(1).split('/')
-
-      let theRepo = await githubStore.fetchRepo({ owner, repo }),
-        emojis = await githubStore.fetchEmojis()
-
-      if (!ref) {
-        ref = theRepo.default_branch
-      }
-
-      let markdown = await githubStore.fetchContent({
-          owner,
-          repo,
-          ref,
-          path: '/' + path.join('/')
-        }),
-        doc = new Doc({ url, markdown, emojis })
-
-      this[url] = doc
-
-      return doc
     }
     //   async parse({ owner, repo, ref, path, contentBlob }) {
     //     let baseUrl = '',
