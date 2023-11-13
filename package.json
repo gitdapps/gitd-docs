@@ -22,7 +22,7 @@
     "highlight.js": "^11.8.0",
     "marked": "^9.0.3",
     "marked-base-url": "^1.0.6",
-    "marked-emoji": "^1.2.2",
+    "marked-emoji": "^1.3.0",
     "marked-highlight": "^2.0.4",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",
