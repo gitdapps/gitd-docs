@@ -3,74 +3,74 @@
 const defaultOptions = {
   // emojis: {}, required
   unicode: false,
-  className: 'emoji'
-}
+  className: "emoji",
+};
 
-export function emoijs(options = {}) {
+export function emojis(options = {}) {
   options = {
     ...defaultOptions,
-    ...options
-  }
+    ...options,
+  };
 
   if (!options.emojis) {
-    throw new Error('Must provide emojis to markedEmoji')
+    throw new Error("Must provide emojis to markedEmoji");
   }
 
   const emojiNames = Object.keys(options.emojis)
-    .map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-    .join('|')
-  const emojiRegex = new RegExp(`:(${emojiNames}):`)
-  const tokenizerRule = new RegExp(`^${emojiRegex.source}`)
+    .map((e) => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|");
+  const emojiRegex = new RegExp(`:(${emojiNames}):`);
+  const tokenizerRule = new RegExp(`^${emojiRegex.source}`);
 
   return {
     extensions: [
       {
-        name: 'emoji',
-        level: 'inline',
+        name: "emoji",
+        level: "inline",
         start(src) {
-          return src.match(emojiRegex)?.index
+          return src.match(emojiRegex)?.index;
         },
         tokenizer(src, tokens) {
-          const match = tokenizerRule.exec(src)
+          const match = tokenizerRule.exec(src);
           if (!match) {
-            return
+            return;
           }
 
-          const name = match[1]
-          let emoji = options.emojis[name]
-          let unicode = options.unicode
+          const name = match[1];
+          let emoji = options.emojis[name];
+          let unicode = options.unicode;
 
-          if (typeof emoji !== 'string') {
-            if (typeof emoji.char === 'string') {
-              emoji = emoji.char
-              unicode = true
-            } else if (typeof emoji.url === 'string') {
-              emoji = emoji.url
-              unicode = false
+          if (typeof emoji !== "string") {
+            if (typeof emoji.char === "string") {
+              emoji = emoji.char;
+              unicode = true;
+            } else if (typeof emoji.url === "string") {
+              emoji = emoji.url;
+              unicode = false;
             } else {
               // invalid emoji
-              return
+              return;
             }
           }
 
           return {
-            type: 'emoji',
+            type: "emoji",
             raw: match[0],
             name,
             emoji,
-            unicode
-          }
+            unicode,
+          };
         },
         renderer(token) {
           if (token.unicode) {
-            return token.emoji
+            return token.emoji;
           } else {
             return `<img class="${options.className}" alt="${token.name}" src="${token.emoji}"${
-              this.parser.options.xhtml ? ' /' : ''
-            }>`
+              this.parser.options.xhtml ? " /" : ""
+            }>`;
           }
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  };
 }

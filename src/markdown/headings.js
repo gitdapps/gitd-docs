@@ -1,42 +1,48 @@
-import GithubSlugger from 'github-slugger'
-import DOMPurify from 'dompurify'
+import GithubSlugger from "github-slugger";
+import DOMPurify from "dompurify";
 
-export function headings({ idPrefix = '', headings = [] } = {}) {
+export function headings({ idPrefix = "", headings = [] } = {}) {
   let slugger,
-    span = document.createElement('span'),
-    generateText = (html) => {
-      span.innerHTML = html
-      return span.textContent || span.innerText || ''
-    },
     generateId = (text) =>
       `${idPrefix}${slugger.slug(
         text
           .toLowerCase()
           .trim()
-          .replace(/<[!\/a-z].*?>/gi, '')
-      )}`
+          .replace(/<[!\/a-z].*?>/gi, ""),
+      )}`;
 
   return {
     hooks: {
       preprocess(src) {
-        slugger = new GithubSlugger()
+        slugger = new GithubSlugger();
 
-        return src
-      }
+        return src;
+      },
     },
     renderer: {
-      heading(html, level) {
+      heading({ tokens, depth }) {
+        const text = this.parser.parseInline(tokens),
+          escapedText = text.toLowerCase().replace(/[^\w]+/g, "-");
+
+        return `
+                <h${depth}>
+                  <a name="${escapedText}" class="anchor" href="#${escapedText}">
+                    <span class="header-link"></span>
+                  </a>
+                  ${text}
+                </h${depth}>`;
+      },
+      heading({ text, depth }) {
         let heading = {
-          text: generateText(DOMPurify.sanitize(html)),
-          level
-        }
+          id: generateId(text),
+          text,
+          level: depth,
+        };
 
-        heading.id = generateId(heading.text)
+        headings.push(heading);
 
-        headings.push(heading)
-
-        return `<h${heading.level} id="${heading.id}">${html}</h${heading.level}>\n`
-      }
-    }
-  }
+        return `<h${heading.level} id="${heading.id}">${text}</h${heading.level}>\n`;
+      },
+    },
+  };
 }

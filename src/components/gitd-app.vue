@@ -11,7 +11,7 @@
 
 <style scoped>
 #gitd-app {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
@@ -30,7 +30,7 @@ body {
 }
 
 .gitd-btn {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   text-transform: uppercase;
   border: solid 1px black;
   padding: 0 0.5em;
@@ -49,7 +49,7 @@ body {
 }
 
 .gitd-logo {
-  font-family: 'Zen Tokyo Zoo';
+  font-family: "Zen Tokyo Zoo";
   font-size: 1.5em;
   text-transform: uppercase;
 }
@@ -70,7 +70,7 @@ body {
 </style>
 
 <script setup>
-import PrimeNav from '@/components/prime-nav.vue'
-import SettingsDialog from '@/components/settings-dialog.vue'
-import JumpDialog from '@/components/jump-dialog.vue'
+import PrimeNav from "@/components/prime-nav.vue";
+import SettingsDialog from "@/components/settings-dialog.vue";
+import JumpDialog from "@/components/jump-dialog.vue";
 </script>

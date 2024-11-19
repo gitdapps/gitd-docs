@@ -17,5 +17,5 @@ img {
 </style>
 
 <script setup>
-defineProps({ user: Object })
+defineProps({ user: Object });
 </script>

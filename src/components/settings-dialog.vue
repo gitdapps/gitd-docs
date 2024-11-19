@@ -66,7 +66,10 @@ dialog {
   <div id="settings-dialog" v-if="open" @click="done" @scroll.stop>
     <dialog open @click.stop>
       <span id="authenticated-card" v-if="authenticatedGithubUser">
-        <img id="avatar" v-bind:src="authenticatedGithubUser.avatar_url" /><br />
+        <img
+          id="avatar"
+          v-bind:src="authenticatedGithubUser.avatar_url"
+        /><br />
         <span id="authenticated-name">{{ authenticatedGithubUser.name }}</span
         ><br />
         <span id="authenticated-login">
@@ -78,7 +81,10 @@ dialog {
       </span>
       <span v-if="!authenticatedGithubUser">
         Gitd works with GitHub, and needs your
-        <a target="blank" @click="toggleToken" href="https://github.com/settings/tokens"
+        <a
+          target="blank"
+          @click="toggleToken"
+          href="https://github.com/settings/tokens"
           >personal access token</a
         >
         to access your data there in order to proceed.
@@ -93,49 +99,59 @@ dialog {
       <span id="dialog-controls">
         <i class="fas fa-key gitd-i-btn" @click="toggleToken" />
 
-        <button class="gitd-btn" @click="ghConnect" v-if="!authenticatedGithubUser">
+        <button
+          class="gitd-btn"
+          @click="ghConnect"
+          v-if="!authenticatedGithubUser"
+        >
           <i class="fab fa-github" /> connect
         </button>
 
-        <button class="gitd-btn" @click="ghDisconnect" v-if="authenticatedGithubUser">
+        <button
+          class="gitd-btn"
+          @click="ghDisconnect"
+          v-if="authenticatedGithubUser"
+        >
           <i class="fab fa-github" /> disconnect
         </button>
 
-        <button class="gitd-btn" @click="done" v-if="authenticatedGithubUser">done</button>
+        <button class="gitd-btn" @click="done" v-if="authenticatedGithubUser">
+          done
+        </button>
       </span>
     </dialog>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useGithubStore } from '@/stores/github'
-import { useDialogsStore } from '@/stores/dialogs'
+import { computed, onMounted, ref } from "vue";
+import { useGithubStore } from "@/stores/github";
+import { useDialogsStore } from "@/stores/dialogs";
 
 const dialogsStore = useDialogsStore(),
   githubStore = useGithubStore(),
-  githubPatInput = ref(''),
-  open = computed(() => dialogsStore.open === 'SETTINGS'),
-  authenticatedGithubUser = computed(() => githubStore.users.authenticated)
+  githubPatInput = ref(""),
+  open = computed(() => dialogsStore.open === "SETTINGS"),
+  authenticatedGithubUser = computed(() => githubStore.users.authenticated);
 
 onMounted(async () => {
   if (!githubStore.isConnected) {
-    console.log('not connected to github')
-    dialogsStore.openDialog('SETTINGS')
+    console.log("not connected to github");
+    dialogsStore.openDialog("SETTINGS");
   }
-})
+});
 
 function ghConnect() {
-  githubStore.connect({ personalAccessToken: githubPatInput.value })
+  githubStore.connect({ personalAccessToken: githubPatInput.value });
 }
 
 function ghDisconnect() {
-  githubStore.disconnect()
+  githubStore.disconnect();
 }
 
 function done() {
   if (authenticatedGithubUser.value) {
-    dialogsStore.closeDialog()
+    dialogsStore.closeDialog();
   }
 }
 </script>

@@ -1,21 +1,21 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useDialogsStore = defineStore('dialogs', {
+export const useDialogsStore = defineStore("dialogs", {
   state: () => {
     return {
-      open: null
-    }
+      open: null,
+    };
   },
   actions: {
     openDialog(name) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = "hidden";
 
-      this.open = name
+      this.open = name;
     },
     closeDialog() {
-      document.body.style.overflow = ''
+      document.body.style.overflow = "";
 
-      this.open = null
-    }
-  }
-})
+      this.open = null;
+    },
+  },
+});

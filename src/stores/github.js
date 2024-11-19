@@ -1,16 +1,16 @@
-import _ from 'lodash'
-import { Octokit } from 'https://esm.sh/octokit'
+import _ from "lodash";
+import { Octokit } from "https://esm.sh/octokit";
 
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
 function initOctokit(personalAccessToken) {
-  return new Octokit({ auth: personalAccessToken, userAgent: 'gitd' }).rest
+  return new Octokit({ auth: personalAccessToken, userAgent: "gitd" }).rest;
 }
 
-const GH_PAT_LS_KEY = 'githubPersonalAccessToken'
-let octokit = initOctokit(localStorage.getItem(GH_PAT_LS_KEY))
+const GH_PAT_LS_KEY = "githubPersonalAccessToken";
+let octokit = initOctokit(localStorage.getItem(GH_PAT_LS_KEY));
 
-export const useGithubStore = defineStore('github', {
+export const useGithubStore = defineStore("github", {
   state: () => {
     return {
       auth: { personalAccessToken: localStorage.getItem(GH_PAT_LS_KEY) },
@@ -18,31 +18,31 @@ export const useGithubStore = defineStore('github', {
       repos: {},
       users: {
         authenticated: null,
-        byUsername: {}
+        byUsername: {},
       },
-      refs: {}
-    }
+      refs: {},
+    };
   },
   actions: {
     // only supporting personal access tokens for now
     async signIn({ personalAccessToken }) {
       if (personalAccessToken) {
-        localStorage.setItem(GH_PAT_LS_KEY, personalAccessToken)
-        this.auth = { personalAccessToken }
-        octokit = initOctokit(personalAccessToken)
+        localStorage.setItem(GH_PAT_LS_KEY, personalAccessToken);
+        this.auth = { personalAccessToken };
+        octokit = initOctokit(personalAccessToken);
 
-        let { data: authenticated } = await octokit.users.getAuthenticated()
-        this.users.authenticated = authenticated
+        let { data: authenticated } = await octokit.users.getAuthenticated();
+        this.users.authenticated = authenticated;
       }
     },
     async signOut() {
-      localStorage.removeItem(GH_PAT_LS_KEY)
-      this.auth = null
-      octokit = initOctokit()
-      this.users.authenticated = null
+      localStorage.removeItem(GH_PAT_LS_KEY);
+      this.auth = null;
+      octokit = initOctokit();
+      this.users.authenticated = null;
     },
     async fetchContent({ owner, repo, ref, path }) {
-      let ret = _.get(this.content, [owner, repo, ref, path])
+      let ret = _.get(this.content, [owner, repo, ref, path]);
 
       if (_.isNil(ret)) {
         ret = atob(
@@ -51,47 +51,47 @@ export const useGithubStore = defineStore('github', {
               owner,
               repo,
               ref,
-              path
+              path,
             })
-          ).data.content
-        )
+          ).data.content,
+        );
 
-        _.set(this.content, [owner, repo, ref, path], ret)
+        _.set(this.content, [owner, repo, ref, path], ret);
       }
 
-      return ret
+      return ret;
     },
     async fetchRepo({ owner, repo }) {
-      let ret = _.get(this.repos, [owner, repo])
+      let ret = _.get(this.repos, [owner, repo]);
 
       if (_.isNil(ret)) {
-        ret = (await octokit.repos.get({ owner, repo })).data
+        ret = (await octokit.repos.get({ owner, repo })).data;
 
-        _.set(this.repos, [owner, repo], ret)
+        _.set(this.repos, [owner, repo], ret);
       }
 
-      return ret
+      return ret;
     },
     async fetchRef({ owner, repo, ref }) {
-      let ret = _.get(this.refs, [owner, repo, ref])
+      let ret = _.get(this.refs, [owner, repo, ref]);
 
       if (_.isNil(ret)) {
         ret = (
           await octokit.git.getRef({
             owner,
             repo,
-            ref
+            ref,
           })
-        ).data
+        ).data;
 
-        _.set(this.refs, [owner, repo, ref], ret)
+        _.set(this.refs, [owner, repo, ref], ret);
       }
 
-      return ret
+      return ret;
     },
     async fetchEmojis() {
       // Get all the emojis available to use on GitHub.
-      const res = await octokit.emojis.get()
+      const res = await octokit.emojis.get();
       /*
        * {
        *   ...
@@ -101,18 +101,25 @@ export const useGithubStore = defineStore('github', {
        *   ...
        * }
        */
-      return res.data
+      return res.data;
     },
     async fetch(url) {
-      let [owner, repo, treeOrBlob, ref, ...path] = url.pathname.substring(1).split('/')
+      let [owner, repo, treeOrBlob, ref, ...path] = url.pathname
+        .substring(1)
+        .split("/");
 
-      let theRepo = await this.fetchRepo({ owner, repo })
+      let theRepo = await this.fetchRepo({ owner, repo });
 
       if (!ref) {
-        ref = theRepo.default_branch
+        ref = theRepo.default_branch;
       }
 
-      return this.fetchContent({ owner, repo, ref, path: '/' + path.join('/') })
-    }
-  }
-})
+      return this.fetchContent({
+        owner,
+        repo,
+        ref,
+        path: "/" + path.join("/"),
+      });
+    },
+  },
+});

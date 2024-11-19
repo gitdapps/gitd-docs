@@ -1,7 +1,7 @@
 <script setup>
-import { Doc } from '@/stores/docs'
+import { Doc } from "@/stores/docs";
 
-const props = defineProps({ doc: Doc })
+const props = defineProps({ doc: Doc });
 </script>
 
 <template>

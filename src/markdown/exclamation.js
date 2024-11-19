@@ -1,30 +1,30 @@
 const variants = [
     // level 1 (red)
-    'bug',
-    'danger',
-    'error',
-    'failure',
+    "bug",
+    "danger",
+    "error",
+    "failure",
 
     // level 2 (amber)
-    'warning',
-    'caution',
-    'attention',
+    "warning",
+    "caution",
+    "attention",
 
     // level 4 (blue)
-    'info',
-    'example',
-    'hint',
-    'note',
-    'abstract',
+    "info",
+    "example",
+    "hint",
+    "note",
+    "abstract",
 
     // level 5 (green)
-    'success',
-    'tip',
-    'question'
+    "success",
+    "tip",
+    "question",
   ],
-  defaultOptions = { className: 'exclamation' },
+  defaultOptions = { className: "exclamation" },
   // variantRule =   new RegExp(`^!!!\\s+(${variants.join('|')})(?:\\s+)?(.*)$`),
-  rule = /^( {0,3}! ?(paragraph|[^\n]*)(?:\n|$))+/
+  rule = /^( {0,3}! ?(paragraph|[^\n]*)(?:\n|$))+/;
 
 /**
  * Marked extension that adds support for "exclamations", examples:
@@ -51,42 +51,42 @@ const variants = [
 export function exclamation(options = {}) {
   options = {
     ...defaultOptions,
-    ...options
-  }
+    ...options,
+  };
 
   return {
     extensions: [
       {
-        name: 'exclamation',
-        level: 'block',
+        name: "exclamation",
+        level: "block",
         start(src) {
-          return src.match(/![^!\n]/)?.index
+          return src.match(/![^!\n]/)?.index;
         },
         tokenizer(src) {
-          const cap = rule.exec(src)
+          const cap = rule.exec(src);
 
           if (cap) {
-            const text = cap[0].replace(/^ *![ \t]?/gm, ''),
-              top = this.lexer.state.top
+            const text = cap[0].replace(/^ *![ \t]?/gm, ""),
+              top = this.lexer.state.top;
 
-            this.lexer.state.top = true
+            this.lexer.state.top = true;
 
-            const tokens = this.lexer.blockTokens(text)
+            const tokens = this.lexer.blockTokens(text);
 
-            this.lexer.state.top = top
+            this.lexer.state.top = top;
 
             return {
-              type: 'exclamation',
+              type: "exclamation",
               raw: cap[0],
               tokens,
-              text
-            }
+              text,
+            };
           }
         },
         renderer({ tokens }) {
-          return `<div class="${options.className}">${this.parser.parse(tokens)}</div>`
-        }
-      }
-    ]
-  }
+          return `<div class="${options.className}">${this.parser.parse(tokens)}</div>`;
+        },
+      },
+    ],
+  };
 }

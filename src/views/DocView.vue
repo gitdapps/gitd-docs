@@ -1,73 +1,73 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect } from "vue";
 
-import DocArticle from '@/components/DocArticle.vue'
-import DocMenu from '@/components/DocMenu.vue'
-import DocOutlineAside from '@/components/DocOutlineAside.vue'
-import DocCommentAside from '@/components/DocCommentAside.vue'
-import { useDocsStore } from '@/stores/docs'
+import DocArticle from "@/components/DocArticle.vue";
+import DocMenu from "@/components/DocMenu.vue";
+import DocOutlineAside from "@/components/DocOutlineAside.vue";
+import DocCommentAside from "@/components/DocCommentAside.vue";
+import { useDocsStore } from "@/stores/docs";
 
-const asideOverlayQuery = window.matchMedia('(max-width: 72rem)'),
-  doubleAsideQuery = window.matchMedia('(min-width: 1460px)')
+const asideOverlayQuery = window.matchMedia("(max-width: 72rem)"),
+  doubleAsideQuery = window.matchMedia("(min-width: 1460px)");
 
 const { docUrl } = defineProps({
-    docUrl: URL
+    docUrl: URL,
   }),
   docsStore = useDocsStore(),
   doc = ref(null),
   outlineActive = ref(false),
   commentActive = ref(false),
   filled = ref(asideOverlayQuery.matches),
-  fillable = ref(!asideOverlayQuery.matches)
+  fillable = ref(!asideOverlayQuery.matches);
 
-doubleAsideQuery.addEventListener('change', (e) => {
+doubleAsideQuery.addEventListener("change", (e) => {
   if (!e.matches && outlineActive.value && commentActive.value) {
-    commentActive.value = false
+    commentActive.value = false;
   }
-})
+});
 
-asideOverlayQuery.addEventListener('change', (e) => {
-  fillable.value = !e.matches
+asideOverlayQuery.addEventListener("change", (e) => {
+  fillable.value = !e.matches;
 
-  toggleFill(e.matches)
-})
+  toggleFill(e.matches);
+});
 
 watchEffect(async () => {
   // this effect will run immediately and then
   // re-run whenever docUrl changes
   if (docUrl) {
-    doc.value = await docsStore.fetch(docUrl)
+    doc.value = await docsStore.fetch(docUrl);
   }
-})
+});
 
 function toggleOutline(newValue = !outlineActive.value) {
-  outlineActive.value = newValue
+  outlineActive.value = newValue;
 
   if (outlineActive.value && commentActive.value && !doubleAsideQuery.matches) {
-    commentActive.value = false
+    commentActive.value = false;
   }
 }
 
 function toggleComment(newValue = !commentActive.value) {
-  commentActive.value = newValue
+  commentActive.value = newValue;
 
   if (outlineActive.value && commentActive.value && !doubleAsideQuery.matches) {
-    outlineActive.value = false
+    outlineActive.value = false;
   }
 }
 
 function toggleFill(newValue = !filled.value) {
-  filled.value = newValue
+  filled.value = newValue;
 }
 
 function coverClick() {
-  outlineActive.value = false
-  commentActive.value = false
+  outlineActive.value = false;
+  commentActive.value = false;
 }
 
 function outlineClick() {
   if (asideOverlayQuery.matches) {
-    toggleOutline(false)
+    toggleOutline(false);
   }
 }
 
@@ -93,7 +93,7 @@ function outlineClick() {
       filled: filled,
       outline: outlineActive,
       comment: commentActive,
-      fillable: fillable
+      fillable: fillable,
     }"
   >
     <doc-menu
@@ -116,7 +116,11 @@ function outlineClick() {
       :class="{ leftClose: commentActive, rightClose: outlineActive }"
       @click="coverClick()"
     >
-      <font-awesome-icon icon="fa-solid fa-xmark" size="xl" style="margin: 1em 1em 0 0.5em" />
+      <font-awesome-icon
+        icon="fa-solid fa-xmark"
+        size="xl"
+        style="margin: 1em 1em 0 0.5em"
+      />
     </div>
 
     <doc-article id="article" :doc="doc" />
