@@ -1,7 +1,9 @@
 import GithubSlugger from "github-slugger";
 import DOMPurify from "dompurify";
 
-export function headings({ idPrefix = "", headings = [] } = {}) {
+import { MdDoc } from "./md-doc";
+
+export function mdom({ idPrefix = "", cb = () => { } } = {}) {
   let slugger,
     span = document.createElement("span"),
     generateText = (html) => {
