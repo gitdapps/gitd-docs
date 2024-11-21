@@ -3,8 +3,9 @@ import DOMPurify from "dompurify";
 
 import { MdDoc } from "./md-doc";
 
-export function mdom({ idPrefix = "", cb = () => { } } = {}) {
-  let slugger,
+export function mdDom(options = {}) {
+  let { idPrefix = "", url = "" } = options,
+    slugger = new GithubSlugger(),
     span = document.createElement("span"),
     generateText = (html) => {
       span.innerHTML = html;
@@ -18,26 +19,24 @@ export function mdom({ idPrefix = "", cb = () => { } } = {}) {
           .replace(/<[!\/a-z].*?>/gi, ""),
       )}`;
 
-  return {
-    hooks: {
-      preprocess(src) {
-        slugger = new GithubSlugger();
+  options.doc = {
+    url,
+    headings: [],
+  };
 
-        return src;
-      },
-    },
+  return {
     renderer: {
-      heading(html, level) {
+      heading({ tokens, depth }) {
         let heading = {
-          text: generateText(DOMPurify.sanitize(html)),
-          level,
+          text: this.parser.parseInline(tokens),
+          level: depth,
         };
 
         heading.id = generateId(heading.text);
 
-        headings.push(heading);
+        options.doc.headings.push(heading);
 
-        return `<h${heading.level} id="${heading.id}">${html}</h${heading.level}>\n`;
+        return `<h${heading.level} id="${heading.id}">${text}</h${heading.level}>\n`;
       },
     },
   };

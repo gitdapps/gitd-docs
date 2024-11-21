@@ -1,8 +1,10 @@
 import { LitElement, css, html } from "lit";
 import { Task, initialState } from "@lit/task";
 import { fetchPagesContentAsText } from "../github.js";
-import { Doc } from "../doc.js";
 import { repeat } from "lit/directives/repeat.js";
+
+import { marked } from "marked";
+import { mdDom } from "../md-dom.js";
 
 export class DocView extends LitElement {
   static properties = {
@@ -16,10 +18,19 @@ export class DocView extends LitElement {
         return initialState;
       }
 
-      return new Doc(
-        contentPath,
+      let theDoc;
+
+      marked.parse(
         await fetchPagesContentAsText(contentPath, signal),
+        mdDom({
+          url: contentPath,
+          set doc(doc) {
+            theDoc = doc;
+          },
+        }),
       );
+
+      return theDoc;
     },
     args: () => [this._contentPath],
   });
