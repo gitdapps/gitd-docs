@@ -1,10 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { Task, initialState } from "@lit/task";
 import { fetchPagesContentAsText } from "../github.js";
-import { repeat } from "lit/directives/repeat.js";
-
-import { marked } from "marked";
-import { mdDom } from "../md-dom.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import { MdDoc } from "../md-doc.js";
 
 export class DocView extends LitElement {
   static properties = {
@@ -18,19 +16,10 @@ export class DocView extends LitElement {
         return initialState;
       }
 
-      let theDoc;
-
-      marked.parse(
+      return new MdDoc(
+        contentPath,
         await fetchPagesContentAsText(contentPath, signal),
-        mdDom({
-          url: contentPath,
-          set doc(doc) {
-            theDoc = doc;
-          },
-        }),
       );
-
-      return theDoc;
     },
     args: () => [this._contentPath],
   });
@@ -52,16 +41,20 @@ export class DocView extends LitElement {
             </span>`,
           pending: () =>
             html`Loading content for <code>${this._contentPath}</code>`,
-          complete: (doc) =>
-            html`<ul>
-              ${repeat(
-                doc.headings,
-                (heading) =>
-                  html` <li>
-                    <label>${heading.text}</label>
-                  </li>`,
+          /**
+           *
+           * @param {MdDoc} mdDoc - the markdown document to render
+           *
+           * @returns {TemplateResult}
+           */
+          complete: (mdDoc) => html`
+            ${unsafeHTML(mdDoc.html)}
+            <ul>
+              ${mdDoc.headings.map(
+                (heading) => html`<li>${heading.text}</li>`,
               )}
-            </ul>`,
+            </ul>
+          `,
           error: (e) => html`<span class="error"> Error: ${e.message} </span>`,
         })}
       </div>
