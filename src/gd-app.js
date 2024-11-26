@@ -1,21 +1,39 @@
-import { html, LitElement } from "lit";
+import { html, css, LitElement } from "lit";
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { Router } from "@lit-labs/router";
-
-import "/src/gd-doc-view.js";
+import "./gd-doc-view.js";
 
 export class GdApp extends LitElement {
+  static styles = css`
+    :host {
+      font-family: sans-serif;
+    }
+  `;
+
+  static properties = {
+    home: { type: String },
+  };
+
   #router = new Router(this, [
     {
       path: "/:path+",
-      render: ({ path = "README" }) => {
-        return html`<gd-doc-view path="${path}"></gd-doc-view>`;
+      pattern: new URLPattern({ pathname: '/:path+' }),
+      render: ({ path }) => {
+        return html`<gd-doc-view path="${ifDefined(path)}"></gd-doc-view>`;
       },
     },
+    {
+      path: "*", // redirect anything else to /<home>
+      enter: () => {
+        location.pathname = `/${this.home ?? 'README'}`;
+        // this.#router.goto(`/${this.home ?? 'README'}`);
+        return false;
+      }
+    }
   ]);
 
   render() {
     return html`
-      <div>this is a test</div>
       ${this.#router.outlet()}
     `;
   }

@@ -8,11 +8,25 @@ import "./gd-doc-outline-aside.js";
 
 export class GdDocView extends LitElement {
   static styles = css`
+    :host {
+      display: flex;
+      justify-content: center;
+    }
+
     .initial {
       font-style: italic;
     }
+
     .error {
       color: red;
+    }
+
+    gd-doc-article {
+      flex: none;
+      width: 50em;
+      border: solid 1px #ccc;
+      border-radius: 0.4em;
+      box-shadow: 0 0 5px 0 rgb(0 0 0 / 10%);
     }
   `;
 
@@ -38,14 +52,14 @@ export class GdDocView extends LitElement {
   render() {
     return html`
       ${this.#docFetchTask.render({
-        initial: () => html`<span class="initial">loading...</span>`,
-        pending: () => html`Loading content for <code>${this.path}</code>`,
-        complete: (mdDoc) => html`
+      initial: () => html`<span class="initial">loading...</span>`,
+      pending: () => html`Loading content for <code>${this.path}</code>`,
+      complete: (mdDoc) => html`
           <gd-doc-article .doc=${mdDoc}></gd-doc-article>
           <gd-doc-outline-aside .doc=${mdDoc}></gd-doc-outline-aside>
         `,
-        error: (e) => html`<span class="error"> Error: ${e.message} </span>`,
-      })}
+      error: (e) => html`<span class="error"> Error: ${e.message} </span>`,
+    })}
     `;
   }
 }
