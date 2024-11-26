@@ -1,6 +1,10 @@
 import { html, css, LitElement } from "lit";
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { Router } from "@lit-labs/router";
+
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+setBasePath('/node_modules/@shoelace-style/shoelace/dist');
+
 import "./gd-doc-view.js";
 
 export class GdApp extends LitElement {

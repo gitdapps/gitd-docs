@@ -9,8 +9,12 @@ import "./gd-doc-outline-aside.js";
 export class GdDocView extends LitElement {
   static styles = css`
     :host {
-      display: flex;
-      justify-content: center;
+      width: 100%;
+
+      display: grid;
+      grid-template-rows: auto;
+      grid-template-columns: 0.5fr 850px 0.5fr;
+      gap: 8px;
     }
 
     .initial {
@@ -19,14 +23,6 @@ export class GdDocView extends LitElement {
 
     .error {
       color: red;
-    }
-
-    gd-doc-article {
-      flex: none;
-      width: 50em;
-      border: solid 1px #ccc;
-      border-radius: 0.4em;
-      box-shadow: 0 0 5px 0 rgb(0 0 0 / 10%);
     }
   `;
 
@@ -55,6 +51,7 @@ export class GdDocView extends LitElement {
       initial: () => html`<span class="initial">loading...</span>`,
       pending: () => html`Loading content for <code>${this.path}</code>`,
       complete: (mdDoc) => html`
+          <div>nav</div>
           <gd-doc-article .doc=${mdDoc}></gd-doc-article>
           <gd-doc-outline-aside .doc=${mdDoc}></gd-doc-outline-aside>
         `,
