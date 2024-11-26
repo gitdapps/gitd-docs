@@ -1,8 +1,12 @@
 import { Marked } from "marked";
+import markedAlert from "marked-alert";
+import markedFootnote from "marked-footnote";
+import { gfmHeadingId } from "marked-gfm-heading-id";
+
 import GithubSlugger from "github-slugger";
 
 const slugger = new GithubSlugger();
-const marked = new Marked();
+
 const span = document.createElement("span");
 
 function getTextContent(html) {
@@ -17,7 +21,7 @@ function getTextContent(html) {
  * @param {string} [idPrefix=""]
  */
 function generateHeadingId(text, idPrefix = "") {
-  `${idPrefix}${slugger.slug(
+  return `${idPrefix}${slugger.slug(
     text
       .toLowerCase()
       .trim()
@@ -29,6 +33,28 @@ function generateHeadingId(text, idPrefix = "") {
  * A class representing a markdown document's contents.
  */
 export class MdDoc {
+  #marked = new Marked()
+    .use(markedAlert())
+    .use(markedFootnote())
+    .use(gfmHeadingId())
+    .use({
+      walkTokens: (token) => {
+        if (token.type === "heading") {
+          let text = getTextContent(this.#marked.parseInline(token.text));
+
+          try {
+            this.headings.push({
+              id: generateHeadingId(text),
+              text,
+              level: token.depth,
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      },
+    });
+
   /**
    * Create a new Doc instance.
    *
@@ -39,19 +65,6 @@ export class MdDoc {
     this.url = url;
     this.markdown = markdown;
     this.headings = [];
-    this.html = marked.parse(markdown, {
-      walkTokens: (token) => {
-        if (token.type === "heading") {
-          try {
-            this.headings.push({
-              text: getTextContent(marked.parseInline(token.text)),
-              level: token.depth,
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        }
-      },
-    });
+    this.html = this.#marked.parse(markdown);
   }
 }

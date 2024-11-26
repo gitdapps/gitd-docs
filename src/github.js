@@ -128,9 +128,6 @@
  * @returns {Promise<string>} Promise object represents the text of specified repo content.
  */
 export const fetchPagesContentAsText = async (path, signal) => {
-  // Artificial delay for demo purposes
-  await new Promise((r) => setTimeout(r, 1000));
-
   const response = await fetch(path, {
     signal,
   });
