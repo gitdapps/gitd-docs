@@ -107,7 +107,7 @@ export class MdDoc {
             return `
               <sl-alert variant="${meta.variant}" open>
                 <sl-icon slot="icon" name="${meta.icon}"></sl-icon>
-                <strong>${meta.title}</strong><br />
+                <strong style="color: var(--sl-color-${meta.variant}-700)">${meta.title}</strong><br />
                 ${this.parser.parse(tokens)}
               </sl-alert>
             `;

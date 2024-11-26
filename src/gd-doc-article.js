@@ -23,6 +23,18 @@ export class GdDocArticle extends LitElement {
       border-bottom: 2px solid grey;
       margin-top: 0;
     }
+
+    sl-alert {
+      margin: 1em 0;
+    }
+
+    p:has(img) {
+      text-align: center;
+    }
+
+    img {
+      width: 80%;
+    }
   `;
 
   static properties = {
