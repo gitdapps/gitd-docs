@@ -2,12 +2,18 @@ import { Marked } from "marked";
 import markedAlert from "marked-alert";
 import markedFootnote from "marked-footnote";
 import { gfmHeadingId } from "marked-gfm-heading-id";
+import { markedEmoji } from "marked-emoji";
+import { markedHighlight } from "marked-highlight";
+import hljs from "@highlightjs/cdn-assets/es/highlight.js";
+import { Octokit } from "@octokit/rest";
 
 import GithubSlugger from "github-slugger";
 
 const slugger = new GithubSlugger();
-
 const span = document.createElement("span");
+const octokit = new Octokit();
+const res = await octokit.rest.emojis.get();
+const emojis = res.data;
 
 function getTextContent(html) {
   span.innerHTML = html;
@@ -48,62 +54,41 @@ export class MdDoc {
           } catch (e) {
             console.error(e);
           }
-        } else if (token.type === 'alert') {
-          // console.log(token);
-          token.type = 'sl-alert';
+        } else if (token.type === "alert") {
+          token.type = "sl-alert";
 
           // sl-alert variants = primary, success, neutral, warning, danger
           // gfm variants = note, tip, important, warning, caution
 
           switch (token.meta.variant) {
-            case 'note':
-              token.meta.variant = 'neutral';
-              token.meta.icon = 'info-circle';
+            case "note":
+              token.meta.variant = "neutral";
+              token.meta.icon = "info-circle";
               break;
-            case 'tip':
-              token.meta.variant = 'success';
-              token.meta.icon = 'lightbulb';
+            case "tip":
+              token.meta.variant = "success";
+              token.meta.icon = "lightbulb";
               break;
-            case 'important':
-              token.meta.variant = 'primary';
-              token.meta.icon = 'exclamation-square';
+            case "important":
+              token.meta.variant = "primary";
+              token.meta.icon = "exclamation-square";
               break;
-            case 'warning':
-              token.meta.variant = 'warning'; // unchanged
-              token.meta.icon = 'exclamation-triangle';
+            case "warning":
+              token.meta.variant = "warning"; // unchanged
+              token.meta.icon = "exclamation-triangle";
               break;
-            case 'caution':
-              token.meta.variant = 'danger';
-              token.meta.icon = 'exclamation-octagon';
+            case "caution":
+              token.meta.variant = "danger";
+              token.meta.icon = "exclamation-octagon";
               break;
           }
-
-
-          //   {
-          //     "className": "markdown-alert",
-          //     "variant": "note",
-          //     "icon": "<svg class=\"octicon octicon-info mr-2\" viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z\"></path></svg>",
-          //     "title": "Note",
-          //     "titleClassName": "markdown-alert-title"
-          // }
-
         }
       },
       extensions: [
         {
-          name: 'sl-alert',
-          level: 'block',
+          name: "sl-alert",
+          level: "block",
           renderer({ meta, tokens = [] }) {
-            // let tmpl = `<div class="${meta.className} ${meta.className}-${meta.variant}">\n`
-            // tmpl += `<p class="${meta.titleClassName}">`
-            // tmpl += meta.icon
-            // tmpl += meta.title
-            // tmpl += '</p>\n'
-            // tmpl += this.parser.parse(tokens)
-            // tmpl += '</div>\n'
-
-            console.log(meta);
-
             return `
               <sl-alert variant="${meta.variant}" open>
                 <sl-icon slot="icon" name="${meta.icon}"></sl-icon>
@@ -111,13 +96,52 @@ export class MdDoc {
                 ${this.parser.parse(tokens)}
               </sl-alert>
             `;
-          }
-        }
-      ]
+          },
+        },
+      ],
     })
+    .use(
+      markedEmoji({
+        emojis,
+        renderer: (token) =>
+          `<img class="emoji" title=":${token.name}:" alt=":${token.name}:" src="${token.emoji}" height="20" width="20" align="absmiddle">`,
+      }),
+    )
+    .use(
+      markedHighlight({
+        emptyLangClass: "hljs",
+        langPrefix: "hljs language-",
+        highlight(code, lang) {
+          const language = hljs.getLanguage(lang) ? lang : "plaintext";
+          return hljs.highlight(code, { language }).value;
+        },
+      }),
+    )
     .use(markedAlert())
     .use(markedFootnote())
-    .use(gfmHeadingId());
+    .use(gfmHeadingId())
+    .use(
+      (function () {
+        let id = 0;
+
+        return {
+          renderer: {
+            code(token) {
+              id++;
+
+              return `
+              <div class="codeblock">
+                <pre>
+                  <code id="code-${id}" class="hljs ${token.lang}">${token.text}</code>
+                </pre>
+                <sl-copy-button from="code-${id}"></sl-copy-button>
+              </div>
+            `;
+            },
+          },
+        };
+      })(),
+    );
 
   /**
    * Create a new Doc instance.

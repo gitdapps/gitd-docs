@@ -25,19 +25,18 @@ GFM specifies alerts like so:
 
 ## Admonitions aren't a thing
 
-> :warning: **Warning:** Do not push the big red button. This is a blockquote trying to look like an admonition.
+> :warning: **Warning:** This kind of admonition isn't a thing, it's just a `<blockquote>`.
 
 !!! bug this is a `bug` type admonition
-The warning above was a `bug` type admonition.
+It's also not a thing, just a `<p>` surrounded awkwardly with triple exclaimations.
 !!!
 
-!!! danger this is a `danger` type admonition The warning above was a `danger` type admonition !!!
+!!! danger this is a `danger` type admonition, still just an awkward `<p>` !!!
 
 !!! note
 
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
-    nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
-    massa, nec semper lorem quam in massa.
+    This is fancier admonition, too bad its also not a thing. This one turns out to be just `<code>`. Lorem ipsum
+    dolor sit amet, consectetur adipiscing elit. Nulla et euismod nulla.
 
 > :memo: **Note:** Sunrises are beautiful.
 
