@@ -38,25 +38,32 @@ export class GdDocArticle extends LitElement {
     }
 
     table {
-      margin: auto;
       border-collapse: collapse;
     }
 
-    .table-wrapper {
+    .gd-table-scroller {
       overflow-x: auto;
-      margin: var(--sl-spacing-large) 0;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .gd-table-container {
+      margin: 3em 0;
+      /* margin: var(--sl-spacing-x-large) 0; */
+      text-align: center;
+    }
+
+    .gd-table-wrapper {
       position: relative;
+      display: inline-block;
+      max-width: 100%;
     }
 
-    .table-wrapper sl-copy-button {
+    .gd-table-container sl-copy-button {
       position: absolute;
-      top: 0;
+      top: -2em;
+      /* top: calc(-1 * var(--sl-spacing-x-large)); */
       right: 0;
-      display: none;
-    }
-
-    .table-wrapper:hover sl-copy-button {
-      display: block;
     }
 
     table,

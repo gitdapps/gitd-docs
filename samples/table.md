@@ -1,4 +1,6 @@
-# Table sample
+# Table Sample
+
+## Basic Table
 
 | A   | B   | C   |
 | --- | --- | --- |
@@ -6,6 +8,17 @@
 | A2  | B2  | C2  |
 | A3  | B3  | C3  |
 | A4  | B4  | C4  |
+
+## Wide Table
+
+| A       | B       | C       | D       | E       | F       | G       | H       | I       | J       | K       | L       | M       | N       | O       | P       | Q       | R       | S       | T       | U       | V       | W       | X       | Y       | Z       |
+| ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
+| A one   | B one   | C one   | D one   | E one   | F one   | G one   | H one   | I one   | J one   | K one   | L one   | M one   | N one   | O one   | P one   | Q one   | R one   | S one   | T one   | U one   | V one   | W one   | X one   | Y one   | Z one   |
+| A two   | B two   | C two   | D two   | E two   | F two   | G two   | H two   | I two   | J two   | K two   | L two   | M two   | N two   | O two   | P two   | Q two   | R two   | S two   | T two   | U two   | V two   | W two   | X two   | Y two   | Z two   |
+| A three | B three | C three | D three | E three | F three | G three | H three | I three | J three | K three | L three | M three | N three | O three | P three | Q three | R three | S three | T three | U three | V three | W three | X three | Y three | Z three |
+| A four  | B four  | C four  | D four  | E four  | F four  | G four  | H four  | I four  | J four  | K four  | L four  | M four  | N four  | O four  | P four  | Q four  | R four  | S four  | T four  | U four  | V four  | W four  | X four  | Y four  | Z four  |
+
+## Other Tables
 
 | Command    | Description                                    |
 | ---------- | ---------------------------------------------- |
@@ -26,15 +39,6 @@
 | -------- | --------- |
 | Backtick | `         |
 | Pipe     | \|        |
-
-## Wide Table
-
-| A       | B       | C       | D       | E       | F       | G       | H       | I       | J       | K       | L       | M       | N       | O       | P       | Q       | R       | S       | T       | U       | V       | W       | X       | Y       | Z       |
-| ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
-| A one   | B one   | C one   | D one   | E one   | F one   | G one   | H one   | I one   | J one   | K one   | L one   | M one   | N one   | O one   | P one   | Q one   | R one   | S one   | T one   | U one   | V one   | W one   | X one   | Y one   | Z one   |
-| A two   | B two   | C two   | D two   | E two   | F two   | G two   | H two   | I two   | J two   | K two   | L two   | M two   | N two   | O two   | P two   | Q two   | R two   | S two   | T two   | U two   | V two   | W two   | X two   | Y two   | Z two   |
-| A three | B three | C three | D three | E three | F three | G three | H three | I three | J three | K three | L three | M three | N three | O three | P three | Q three | R three | S three | T three | U three | V three | W three | X three | Y three | Z three |
-| A four  | B four  | C four  | D four  | E four  | F four  | G four  | H four  | I four  | J four  | K four  | L four  | M four  | N four  | O four  | P four  | Q four  | R four  | S four  | T four  | U four  | V four  | W four  | X four  | Y four  | Z four  |
 
 ## Long Table
 

@@ -111,16 +111,20 @@ export class MdDoc {
                 .map((cell) =>
                   getTextContent(this.parser.parseInline(cell.tokens)),
                 )
-                .join();
+                .join("\t");
               copyValue += "\n";
             });
 
             const id = `table-${Math.round(Math.random() * 10000)}`;
 
             return `
-              <div id="${id}" class="table-wrapper">
-                <sl-copy-button value="${copyValue}"></sl-copy-button>
-                ${this.parser.renderer.table(token)}
+              <div id="${id}" class="gd-table-container">
+                <div class="gd-table-wrapper">
+                  <sl-copy-button copy-label="Copy TSV" value="${copyValue}"></sl-copy-button>
+                  <div class="gd-table-scroller">
+                    ${this.parser.renderer.table(token)}
+                  </div>
+                </div>
               </div>
             `;
           },
