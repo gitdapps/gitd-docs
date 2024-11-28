@@ -67,6 +67,8 @@ export class GdFeaturefulContent extends LitElement {
             .replaceAll("\r", "\n")
             .replaceAll("\n\t", "\n")
             .trim();
+        } else if (node.tagName === "PRE") {
+          this._copyLabel = "Copy Code";
         }
 
         return node.textContent ? node.textContent : "";
