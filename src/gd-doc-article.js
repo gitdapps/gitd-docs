@@ -1,9 +1,11 @@
 import { LitElement, css, html } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { MdDoc } from "./md-doc.js";
+import "./gd-featureful-content.js";
 
 import "@shoelace-style/shoelace/dist/components/alert/alert.js";
 import "@shoelace-style/shoelace/dist/components/icon/icon.js";
+import "@shoelace-style/shoelace/dist/components/icon-button/icon-button.js";
 import "@shoelace-style/shoelace/dist/components/copy-button/copy-button.js";
 import "@shoelace-style/shoelace/dist/components/popup/popup.js";
 import "@shoelace-style/shoelace/dist/components/tooltip/tooltip.js";
@@ -41,31 +43,6 @@ export class GdDocArticle extends LitElement {
       border-collapse: collapse;
     }
 
-    .gd-table-scroller {
-      overflow-x: auto;
-      display: inline-block;
-      max-width: 100%;
-    }
-
-    .gd-table-container {
-      margin: 3em 0;
-      /* margin: var(--sl-spacing-x-large) 0; */
-      text-align: center;
-    }
-
-    .gd-table-wrapper {
-      position: relative;
-      display: inline-block;
-      max-width: 100%;
-    }
-
-    .gd-table-container sl-copy-button {
-      position: absolute;
-      top: -2em;
-      /* top: calc(-1 * var(--sl-spacing-x-large)); */
-      right: 0;
-    }
-
     table,
     th,
     td {
@@ -82,17 +59,10 @@ export class GdDocArticle extends LitElement {
       background-color: var(--sl-color-neutral-50);
     }
 
-    .codeblock {
-      display: flex;
-      justify-content: space-between;
-      margin: 1em 0;
-      background: #f3f3f3;
-      border-radius: var(--sl-border-radius-medium);
-    }
-
-    .codeblock pre {
+    pre {
+      text-align: left;
+      background: var(--sl-color-neutral-100);
       margin: 0;
-      display: inline-flex;
     }
 
     code {

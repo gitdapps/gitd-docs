@@ -83,7 +83,9 @@ export class MdDoc {
               break;
           }
         } else if (token.type === "table") {
-          token.type = "wrapped-table";
+          token.type = "gd-table";
+        } else if (token.type === "code") {
+          token.type = "gd-code";
         }
       },
       extensions: [
@@ -101,32 +103,17 @@ export class MdDoc {
           },
         },
         {
-          name: "wrapped-table",
+          name: "gd-table",
           level: "block",
           renderer(token) {
-            let copyValue = "";
-
-            token.rows.forEach((row) => {
-              copyValue += row
-                .map((cell) =>
-                  getTextContent(this.parser.parseInline(cell.tokens)),
-                )
-                .join("\t");
-              copyValue += "\n";
-            });
-
-            const id = `table-${Math.round(Math.random() * 10000)}`;
-
-            return `
-              <div id="${id}" class="gd-table-container">
-                <div class="gd-table-wrapper">
-                  <sl-copy-button copy-label="Copy TSV" value="${copyValue}"></sl-copy-button>
-                  <div class="gd-table-scroller">
-                    ${this.parser.renderer.table(token)}
-                  </div>
-                </div>
-              </div>
-            `;
+            return `<gd-featureful-content>${this.parser.renderer.table(token)}</gd-featureful-content>`;
+          },
+        },
+        {
+          name: "gd-code",
+          level: "block",
+          renderer(token) {
+            return `<gd-featureful-content full-width="true">${this.parser.renderer.code(token)}</gd-featureful-content>`;
           },
         },
       ],
@@ -150,29 +137,29 @@ export class MdDoc {
     )
     .use(markedAlert())
     .use(markedFootnote())
-    .use(gfmHeadingId())
-    .use(
-      (function () {
-        let id = 0;
+    .use(gfmHeadingId());
+  // .use(
+  //   (function () {
+  //     let id = 0;
 
-        return {
-          renderer: {
-            code(token) {
-              id++;
+  //     return {
+  //       renderer: {
+  //         code(token) {
+  //           id++;
 
-              return `
-              <div class="codeblock">
-                <pre>
-                  <code id="code-${id}" class="hljs ${token.lang}">${token.text}</code>
-                </pre>
-                <sl-copy-button from="code-${id}"></sl-copy-button>
-              </div>
-            `;
-            },
-          },
-        };
-      })(),
-    );
+  //           return `
+  //           <div class="codeblock">
+  //             <pre>
+  //               <code id="code-${id}" class="hljs ${token.lang}">${token.text}</code>
+  //             </pre>
+  //             <sl-copy-button from="code-${id}"></sl-copy-button>
+  //           </div>
+  //         `;
+  //         },
+  //       },
+  //     };
+  //   })(),
+  // );
 
   /**
    * Create a new Doc instance.
