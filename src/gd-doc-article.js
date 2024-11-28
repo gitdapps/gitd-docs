@@ -37,6 +37,44 @@ export class GdDocArticle extends LitElement {
       width: 80%;
     }
 
+    table {
+      margin: auto;
+      border-collapse: collapse;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: var(--sl-spacing-large) 0;
+      position: relative;
+    }
+
+    .table-wrapper sl-copy-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: none;
+    }
+
+    .table-wrapper:hover sl-copy-button {
+      display: block;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid var(--sl-color-neutral-300);
+      box-shadow: var(--sl-shadow-small);
+    }
+
+    th,
+    td {
+      padding: var(--sl-spacing-x-small) var(--sl-spacing-medium);
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: var(--sl-color-neutral-50);
+    }
+
     .codeblock {
       display: flex;
       justify-content: space-between;
@@ -50,10 +88,19 @@ export class GdDocArticle extends LitElement {
       display: inline-flex;
     }
 
+    code {
+      background: var(--sl-color-neutral-100);
+      padding: var(--sl-spacing-2x-small) var(--sl-spacing-x-small);
+      border-radius: var(--sl-border-radius-small);
+    }
+
     pre code.hljs {
       display: block;
       overflow-x: auto;
       padding: 1em;
+      border-radius: 0;
+      border: none;
+      background: none;
     }
 
     code.hljs {

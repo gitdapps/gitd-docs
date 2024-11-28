@@ -31,7 +31,7 @@ function generateHeadingId(text, idPrefix = "") {
     text
       .toLowerCase()
       .trim()
-      .replace(/<[!\/a-z].*?>/gi, ""),
+      .replace(/<[!/a-z].*?>/gi, ""),
   )}`;
 }
 
@@ -82,6 +82,8 @@ export class MdDoc {
               token.meta.icon = "exclamation-octagon";
               break;
           }
+        } else if (token.type === "table") {
+          token.type = "wrapped-table";
         }
       },
       extensions: [
@@ -95,6 +97,31 @@ export class MdDoc {
                 <strong style="color: var(--sl-color-${meta.variant}-700)">${meta.title}</strong><br />
                 ${this.parser.parse(tokens)}
               </sl-alert>
+            `;
+          },
+        },
+        {
+          name: "wrapped-table",
+          level: "block",
+          renderer(token) {
+            let copyValue = "";
+
+            token.rows.forEach((row) => {
+              copyValue += row
+                .map((cell) =>
+                  getTextContent(this.parser.parseInline(cell.tokens)),
+                )
+                .join();
+              copyValue += "\n";
+            });
+
+            const id = `table-${Math.round(Math.random() * 10000)}`;
+
+            return `
+              <div id="${id}" class="table-wrapper">
+                <sl-copy-button value="${copyValue}"></sl-copy-button>
+                ${this.parser.renderer.table(token)}
+              </div>
             `;
           },
         },
