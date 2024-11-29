@@ -9,6 +9,7 @@ import "@shoelace-style/shoelace/dist/components/icon-button/icon-button.js";
 import "@shoelace-style/shoelace/dist/components/copy-button/copy-button.js";
 import "@shoelace-style/shoelace/dist/components/popup/popup.js";
 import "@shoelace-style/shoelace/dist/components/tooltip/tooltip.js";
+import "@shoelace-style/shoelace/dist/components/card/card.js";
 
 export class GdDocArticle extends LitElement {
   static styles = css`
@@ -27,16 +28,9 @@ export class GdDocArticle extends LitElement {
       margin-top: 0;
     }
 
-    sl-alert {
+    sl-alert,
+    sl-card {
       margin: 1em 0;
-    }
-
-    p:has(img:not(.emoji)) {
-      text-align: center;
-    }
-
-    img:not(.emoji) {
-      width: 80%;
     }
 
     table {
@@ -69,6 +63,18 @@ export class GdDocArticle extends LitElement {
       background: var(--sl-color-neutral-100);
       padding: var(--sl-spacing-2x-small) var(--sl-spacing-x-small);
       border-radius: var(--sl-border-radius-small);
+    }
+
+    sl-card {
+      display: flex;
+    }
+
+    blockquote {
+      margin: 0;
+    }
+
+    blockquote p {
+      margin: 0;
     }
 
     pre code.hljs {

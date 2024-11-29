@@ -2,7 +2,7 @@
 
 ## Section One
 
-Lorem ipsum dolor sit amet, _consectetur_ adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit egestas dui id ornare arcu. Diam maecenas sed enim ut sem viverra. Mauris **commodo** quis imperdiet massa tincidunt nunc. Vel turpis nunc eget lorem dolor sed. Vulputate mi sit amet mauris commodo quis imperdiet. Ipsum dolor sit amet consectetur. Pharetra sit amet aliquam id diam maecenas ultricies. Ultrices in iaculis nunc sed augue lacus. Tempor id eu nisl nunc mi ipsum faucibus. Vitae congue mauris rhoncus aenean vel elit **_scelerisque_** mauris pellentesque. Velit dignissim sodales ut eu sem integer vitae justo eget. In iaculis nunc sed augue. Tortor id aliquet lectus proin nibh nisl. Velit laoreet id donec ultrices tincidunt. Fermentum et sollicitudin ac orci phasellus. Lacus luctus accumsan tortor posuere. Id diam maecenas ultricies mi eget mauris pharetra et ultrices. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec.
+Lorem ipsum dolor sit amet, _consectetur_ adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit egestas dui id ornare arcu. Diam maecenas sed enim ut sem viverra. Mauris **commodo** quis imperdiet massa tincidunt nunc. Vel turpis nunc eget lorem dolor sed. Vulputate mi sit amet mauris commodo quis imperdiet. Ipsum dolor sit amet consectetur. Pharetra sit amet aliquam id diam maecenas ultricies. Ultrices in iaculis nunc sed augue lacus. Tempor id eu nisl nunc mi ipsum faucibus. Vitae congue mauris rhoncus aenean vel elit **_scelerisque_** mauris pellentesque. Velit dignissim sodales ut eu sem integer vitae justo eget. In iaculis nunc sed augue. Tortor id aliquet lectus proin nibh nisl. ![Cursus mattis molestie a iaculis at](/node_modules/@shoelace-style/shoelace/dist/assets/icons/0-circle-fill.svg) Velit laoreet id donec ultrices tincidunt. Fermentum et sollicitudin ac orci phasellus. Lacus luctus accumsan tortor posuere. Id diam maecenas ultricies mi eget mauris pharetra et ultrices. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec.
 
 ## Alerts are a thing
 
@@ -35,8 +35,8 @@ It's also not a thing, just a `<p>` surrounded awkwardly with triple exclaimatio
 
 !!! note
 
-    This is fancier admonition, too bad its also not a thing. This one turns out to be just `<code>`. Lorem ipsum
-    dolor sit amet, consectetur adipiscing elit. Nulla et euismod nulla.
+    This is a fancier exclaimations admonition, too bad its also not a thing. This one turns out to be
+    just `<code>`. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod nulla.
 
 > :memo: **Note:** Sunrises are beautiful.
 
@@ -79,6 +79,10 @@ That is so funny! :joy:
 - [ ] Update the website
 - [ ] Contact the media
 
+## Images
+
+![genAI](https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/a8/2d/6c/a82d6cf6-5240-03d4-b093-aa7282768d52/AppIcon-0-1x_U007emarketing-0-10-0-85-220-0.png/256x256bb.jpg)
+
 ### Subsection One Point One
 
 Hac _habitasse_ platea dictumst quisque. Tellus at urna condimentum mattis pellentesque. Sit amet volutpat consequat mauris nunc congue nisi vitae suscipit. Lectus mauris ultrices eros in cursus turpis. Duis **convallis** convallis tellus id interdum. Amet commodo nulla facilisi nullam. Vulputate mi sit amet mauris commodo quis imperdiet massa tincidunt. Massa tempor nec **_feugiat_** nisl pretium fusce id. Mattis vulputate enim nulla aliquet. Viverra adipiscing at in tellus integer feugiat scelerisque varius morbi. Et malesuada fames ac turpis egestas integer eget aliquet nibh. Amet justo donec enim diam vulputate ut. In iaculis nunc sed augue lacus viverra vitae congue. Sed viverra ipsum nunc aliquet.
@@ -119,7 +123,7 @@ See the section on [`code`](#code).
 
 ## Section Two
 
-Vulputate dignissim suspendisse in est ante in nibh. Tristique nulla aliquet enim tortor at. Vestibulum sed arcu non odio euismod lacinia. Quam adipiscing vitae proin sagittis nisl. Cursus mattis molestie a iaculis at. Blandit turpis cursus in hac habitasse platea dictumst. Sodales ut etiam sit amet. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis. Aliquam etiam erat velit scelerisque in dictum non. Rhoncus aenean vel elit scelerisque. Justo laoreet sit amet cursus sit. Consectetur purus ut faucibus pulvinar. Ut faucibus pulvinar elementum integer.
+Vulputate dignissim suspendisse in est ante in nibh. Tristique nulla aliquet enim tortor at. Vestibulum sed arcu non odio euismod lacinia. Quam adipiscing vitae proin sagittis nisl. Blandit turpis cursus in hac habitasse platea dictumst. Sodales ut etiam sit amet. Eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis. Aliquam etiam erat velit scelerisque in dictum non. Rhoncus aenean vel elit scelerisque. Justo laoreet sit amet cursus sit. Consectetur purus ut faucibus pulvinar. Ut faucibus pulvinar elementum integer.
 
 ![The San Juan Mountains are beautiful!](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=1080 "San Juan Mountains")
 

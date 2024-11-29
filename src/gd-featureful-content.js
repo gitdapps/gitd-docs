@@ -17,8 +17,8 @@ export class GdFeaturefulContent extends LitElement {
     }
 
     .gd-fc-container {
-      margin: 3em 0;
-      /* margin: var(--sl-spacing-x-large) 0; */
+      /* top | right | bottom | left */
+      margin: 3em 0 1em 0;
       text-align: center;
     }
 
@@ -33,6 +33,10 @@ export class GdFeaturefulContent extends LitElement {
       top: -2em;
       /* top: calc(-1 * var(--sl-spacing-x-large)); */
       right: 0;
+    }
+
+    ::slotted(img) {
+      max-width: 100%;
     }
   `;
 
@@ -69,12 +73,31 @@ export class GdFeaturefulContent extends LitElement {
             .trim();
         } else if (node.tagName === "PRE") {
           this._copyLabel = "Copy Code";
+        } else if (node.tagName === "IMG") {
+          this._copyLabel = "Copy URL";
+          return node.src;
         }
 
         return node.textContent ? node.textContent : "";
       })
       .join("");
   }
+
+  // TODO: support copying image data to clipboard
+  // async #copyImgToClipboard(imgUrl) {
+  //   try {
+  //     const data = await fetch(imgUrl);
+  //     const blob = await data.blob();
+  //     await navigator.clipboard.write([
+  //       new ClipboardItem({
+  //         [blob.type]: blob,
+  //       }),
+  //     ]);
+  //     console.log('Image copied.');
+  //   } catch (err) {
+  //     console.error(err.name, err.message);
+  //   }
+  // }
 
   #onExpand() {
     this.shadowRoot.querySelector("sl-dialog").show();

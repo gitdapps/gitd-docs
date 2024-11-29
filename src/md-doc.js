@@ -42,7 +42,11 @@ export class MdDoc {
   #marked = new Marked()
     .use({
       walkTokens: (token) => {
-        if (token.type === "heading") {
+        if (token.type === "paragraph") {
+          if (token.tokens.length === 1 && token.tokens[0].type === "image") {
+            token.tokens[0].type = "gd-image";
+          }
+        } else if (token.type === "heading") {
           let text = getTextContent(this.#marked.parseInline(token.text));
 
           try {
@@ -82,6 +86,8 @@ export class MdDoc {
               token.meta.icon = "exclamation-octagon";
               break;
           }
+        } else if (token.type === "blockquote") {
+          token.type = "gd-blockquote";
         } else if (token.type === "table") {
           token.type = "gd-table";
         } else if (token.type === "code") {
@@ -103,6 +109,14 @@ export class MdDoc {
           },
         },
         {
+          name: "gd-blockquote",
+          level: "block",
+          renderer(token) {
+            return `
+            <sl-card>${this.parser.renderer.blockquote(token)}</sl-card>`;
+          },
+        },
+        {
           name: "gd-table",
           level: "block",
           renderer(token) {
@@ -114,6 +128,13 @@ export class MdDoc {
           level: "block",
           renderer(token) {
             return `<gd-featureful-content full-width="true">${this.parser.renderer.code(token)}</gd-featureful-content>`;
+          },
+        },
+        {
+          name: "gd-image",
+          level: "block",
+          renderer(token) {
+            return `<gd-featureful-content>${this.parser.renderer.image(token)}</gd-featureful-content>`;
           },
         },
       ],
