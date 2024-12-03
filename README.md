@@ -1,6 +1,6 @@
-### _**[Test](https://www.google.com)ing**_
+# Gitd
 
-Web-based markdown editor.
+A markdown documentation app for your github repo.
 
 ## Project Setup
 
@@ -19,5 +19,3 @@ npm start
 ```sh
 npm run lint
 ```
-
-

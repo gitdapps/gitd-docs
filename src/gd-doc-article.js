@@ -21,6 +21,10 @@ export class GdDocArticle extends LitElement {
       overflow: hidden;
     }
 
+    p {
+      line-height: 1.5;
+    }
+
     h1 {
       padding: 0.3em 0 0.8em 0;
       margin-bottom: 1.3em;
