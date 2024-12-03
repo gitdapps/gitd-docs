@@ -36,11 +36,13 @@ export class GdFeaturefulContent extends LitElement {
     }
 
     ::slotted(img) {
-      max-width: 100%;
+      max-width: 100% !important;
+      max-height: 100% !important;
     }
   `;
 
   static properties = {
+    title: { type: String },
     fullWidth: { type: Boolean, attribute: "full-width" },
     _value: { type: String, state: true },
     _copyLabel: { type: String, state: true },
@@ -133,6 +135,7 @@ export class GdFeaturefulContent extends LitElement {
       >
         <div class="gd-fc-wrapper" style=${styleMap(fwStyle)}>
           <div class="gd-fc-tools">
+            ${this.title ? html`<span>${this.title}</span>` : ""}
             <sl-tooltip content="Expand View">
               <sl-icon-button
                 @click=${this.#onExpand}

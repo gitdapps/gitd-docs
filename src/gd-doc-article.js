@@ -28,6 +28,10 @@ export class GdDocArticle extends LitElement {
       margin-top: 0;
     }
 
+    img {
+      max-height: 1em;
+    }
+
     sl-alert,
     sl-card {
       margin: 1em 0;

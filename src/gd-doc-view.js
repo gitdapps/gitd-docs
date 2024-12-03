@@ -15,6 +15,8 @@ export class GdDocView extends LitElement {
       grid-template-rows: auto;
       grid-template-columns: 0.5fr 850px 0.5fr;
       gap: 8px;
+
+      align-items: start;
     }
 
     .initial {

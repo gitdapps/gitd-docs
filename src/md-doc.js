@@ -127,7 +127,7 @@ export class MdDoc {
           name: "gd-code",
           level: "block",
           renderer(token) {
-            return `<gd-featureful-content full-width="true">${this.parser.renderer.code(token)}</gd-featureful-content>`;
+            return `<gd-featureful-content title="${token.lang}" full-width="true">${this.parser.renderer.code(token)}</gd-featureful-content>`;
           },
         },
         {
