@@ -31,8 +31,20 @@ export class GdFeaturefulContent extends LitElement {
     .gd-fc-tools {
       position: absolute;
       top: -2em;
-      /* top: calc(-1 * var(--sl-spacing-x-large)); */
-      right: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .gd-fc-title {
+      text-transform: uppercase;
+      flex-grow: 1;
+      text-align: left;
+      margin: auto;
+      font-size: var(--sl-font-size-x-small);
+      font-family: var(--sl-font-mono);
+      font-weight: var(--sl-font-weight-semibold);
+      user-select: none;
     }
 
     ::slotted(img) {
@@ -135,7 +147,7 @@ export class GdFeaturefulContent extends LitElement {
       >
         <div class="gd-fc-wrapper" style=${styleMap(fwStyle)}>
           <div class="gd-fc-tools">
-            ${this.title ? html`<span>${this.title}</span>` : ""}
+            <span class="gd-fc-title">${this.title ?? ""}</span>
             <sl-tooltip content="Expand View">
               <sl-icon-button
                 @click=${this.#onExpand}

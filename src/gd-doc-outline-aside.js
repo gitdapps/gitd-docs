@@ -11,7 +11,7 @@ export class GdDocOutlineAside extends LitElement {
 
     a {
       text-decoration: none;
-      color: var(--sl-color-);
+      color: var(--sl-color-primary-800);
       cursor: pointer;
     }
 
